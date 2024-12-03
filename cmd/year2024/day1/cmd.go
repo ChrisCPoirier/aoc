@@ -1,6 +1,7 @@
 package day1
 
 import (
+	"aoc/cmd/common"
 	"aoc/cmd/matrix"
 	"fmt"
 	"math"
@@ -66,22 +67,12 @@ func part2(s []byte) float64 {
 	slices.Sort(g[0])
 	slices.Sort(g[1])
 
-	am := mapWithCount(g[0])
-	bm := mapWithCount(g[1])
+	am := common.Counts(g[0])
+	bm := common.Counts(g[1])
 
 	for k := range am {
-		score += (am[k] * k) * bm[k]
+		score += (float64(am[k]) * k) * float64(bm[k])
 	}
 
 	return score
-}
-
-func mapWithCount(in []float64) map[float64]float64 {
-	out := map[float64]float64{}
-
-	for _, a := range in {
-		out[a] = out[a] + 1
-	}
-
-	return out
 }

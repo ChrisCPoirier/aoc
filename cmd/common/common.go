@@ -63,3 +63,13 @@ func Stitch(items [][]string, d string) []string {
 
 	return stiched
 }
+
+func Counts[E comparable](in []E) map[E]int {
+	out := map[E]int{}
+
+	for _, a := range in {
+		out[a] = out[a] + 1
+	}
+
+	return out
+}
