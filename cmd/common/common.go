@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/sirupsen/logrus"
 )
@@ -78,23 +79,24 @@ func Counts[E comparable](in []E) map[E]int {
 	return out
 }
 
-func Run[T comparable](year, day string, part int, fn func([]byte) T) {
+func Run[T comparable](year, day string, part int, fn func([]byte) T, message ...string) {
 	b, err := os.ReadFile(fmt.Sprintf(`cmd/year%s/%s/%d.txt`, year, day, part))
 
 	if err != nil {
 		logrus.Fatal(err)
 	}
 
+	m := strings.Join(message, ``)
 	result := fn(b)
 	switch v := any(result).(type) {
 	case string:
-		logrus.Infof("score part%d: %s", part, v)
+		logrus.Infof("score part%d%s: %s", part, m, v)
 	case float64, float32:
-		logrus.Infof("score part%d: %.0f", part, v)
+		logrus.Infof("score part%d%s: %.0f", part, m, v)
 	case int:
-		logrus.Infof("score part%d: %d", part, v)
+		logrus.Infof("score part%d%s: %d", part, m, v)
 	default:
-		logrus.Infof("score part%d: %#v", part, v)
+		logrus.Infof("score part%d%s: %#v", part, m, v)
 	}
 
 }

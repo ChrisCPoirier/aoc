@@ -1,13 +1,11 @@
 package day2
 
 import (
+	"aoc/cmd/common"
 	"aoc/cmd/matrix"
-	"fmt"
 	"math"
-	"os"
 	"slices"
 
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -21,21 +19,9 @@ var Cmd = &cobra.Command{
 }
 
 func execute(parent, command string) {
-	b, err := os.ReadFile(fmt.Sprintf(`cmd/year%s/%s/1.txt`, parent, command))
-
-	if err != nil {
-		logrus.Fatal(err)
-	}
-
-	b2, err := os.ReadFile(fmt.Sprintf(`cmd/year%s/%s/2.txt`, parent, command))
-
-	if err != nil {
-		logrus.Fatal(err)
-	}
-
-	logrus.Infof("score part1: %d", part1(b))
-	logrus.Infof("score part2: %d", part2(b2))
-	logrus.Infof("score part2 bruteforce: %d", bruteForce(b2))
+	common.Run(parent, command, 1, part1)
+	common.Run(parent, command, 2, part2)
+	common.Run(parent, command, 2, bruteForce, `bruteForce`)
 }
 
 func part1(s []byte) int {
