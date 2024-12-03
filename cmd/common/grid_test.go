@@ -70,3 +70,31 @@ func TestRandom(t *testing.T) {
 	}
 
 }
+
+func TestGridRotateUnequal(t *testing.T) {
+
+	input := `AB
+EF
+IJ
+ZY`
+	initExpected := Grid{
+		{`A`, `B`},
+		{`E`, `F`},
+		{`I`, `J`},
+		{`Z`, `Y`},
+	}
+
+	g := AsGrid(input, ``)
+
+	assert.Equal(t, initExpected, g)
+
+	g = g.Rotate()
+
+	expected := Grid{
+		{`Z`, `I`, `E`, `A`},
+		{`Y`, `J`, `F`, `B`},
+	}
+
+	assert.Equal(t, expected, g)
+
+}

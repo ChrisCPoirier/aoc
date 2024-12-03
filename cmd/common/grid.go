@@ -9,9 +9,7 @@ func AsGrid(s, sep string) Grid {
 	grid := Grid{}
 
 	for _, line := range strings.Split(s, "\n") {
-		println(line)
 		grid = append(grid, strings.Split(line, sep))
-		fmt.Printf("%#v\n", grid)
 	}
 
 	return grid
@@ -73,6 +71,9 @@ func (g Grid) AsGridF() GridF {
 }
 
 func (g Grid) Rotate() Grid {
+	if len(g[0]) != len(g) {
+		return g.rotateUnequal()
+	}
 
 	// reverse the grid
 	for i, j := 0, len(g)-1; i < j; i, j = i+1, j-1 {
@@ -85,5 +86,17 @@ func (g Grid) Rotate() Grid {
 			g[i][j], g[j][i] = g[j][i], g[i][j]
 		}
 	}
+	return g
+}
+
+func (g Grid) rotateUnequal() Grid {
+	n := make(Grid, len(g[0]))
+	for _, row := range g {
+		for i, col := range row {
+			n[i] = append([]string{col}, n[i]...)
+		}
+	}
+
+	g = n
 	return g
 }
