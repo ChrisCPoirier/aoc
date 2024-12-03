@@ -41,24 +41,6 @@ func (g Strings) Pretty() string {
 
 }
 
-func (g Ints) Pretty() string {
-	out := ``
-	for _, item := range g {
-		out += fmt.Sprintf("%d\n", item)
-	}
-	return out
-
-}
-
-func (g Floats) Pretty() string {
-	out := ``
-	for _, item := range g {
-		out += fmt.Sprintf("%.0f\n", item)
-	}
-	return out
-
-}
-
 func (g Strings) Ints() Ints {
 	n := Ints{}
 	for _, row := range g {
