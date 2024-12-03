@@ -33,7 +33,7 @@ func execute(parent, command string) {
 
 func part1(s string, scale int) int64 {
 	// var score int64 = 0
-	m := grid.AsGrid(s, "")
+	m := grid.New(s, "")
 
 	galaxies := [][]int{}
 

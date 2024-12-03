@@ -38,7 +38,7 @@ func execute(parent, command string) {
 func part1(s string, min, max int) int64 {
 	// var score int = 0
 
-	g := grid.AsGrid(s, "").AsGridI()
+	g := grid.New(s, "").Ints()
 
 	pq := &PriorityQueue{}
 	heap.Init(pq)

@@ -33,7 +33,7 @@ func execute(parent, command string) {
 
 func part1(s string) int64 {
 	// var score int64 = 0
-	m := grid.AsGrid(s, "")
+	m := grid.New(s, "")
 
 	x, y := getStart(m)
 
@@ -167,7 +167,7 @@ func getStart(m [][]string) (int, int) {
 
 func part2(s string) int64 {
 	// var score int64 = 0
-	m := grid.AsGrid(s, "")
+	m := grid.New(s, "")
 
 	x, y := getStart(m)
 

@@ -41,9 +41,9 @@ func part1(s []byte) float64 {
 	score := 0.0
 
 	g := grid.
-		AsGrid(string(s), "   ").
+		New(string(s), "   ").
 		Rotate().
-		AsGridF()
+		Floats()
 
 	slices.Sort(g[0])
 	slices.Sort(g[1])
@@ -59,9 +59,9 @@ func part2(s []byte) float64 {
 	score := 0.0
 
 	g := grid.
-		AsGrid(string(s), "   ").
+		New(string(s), "   ").
 		Rotate().
-		AsGridF()
+		Floats()
 
 	slices.Sort(g[0])
 	slices.Sort(g[1])

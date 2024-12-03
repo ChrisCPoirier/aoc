@@ -37,7 +37,7 @@ func part1(s string, allowedImperfections int) int64 {
 	mirrors := [][][]string{}
 
 	for _, lines := range strings.Split(s, "\n\n") {
-		g := grid.AsGrid(lines, "")
+		g := grid.New(lines, "")
 		mirrors = append(mirrors, g)
 	}
 

@@ -12,19 +12,19 @@ func TestGridRotate(t *testing.T) {
 	input := `ABC
 EFG
 IJK`
-	initExpected := Grid{
+	initExpected := Strings{
 		{`A`, `B`, `C`},
 		{`E`, `F`, `G`},
 		{`I`, `J`, `K`},
 	}
 
-	g := AsGrid(input, ``)
+	g := New(input, ``)
 
 	assert.Equal(t, initExpected, g)
 
 	g.Rotate()
 
-	expected := Grid{
+	expected := Strings{
 		{`I`, `E`, `A`},
 		{`J`, `F`, `B`},
 		{`K`, `G`, `C`},
@@ -78,20 +78,20 @@ func TestGridRotateUnequal(t *testing.T) {
 EF
 IJ
 ZY`
-	initExpected := Grid{
+	initExpected := Strings{
 		{`A`, `B`},
 		{`E`, `F`},
 		{`I`, `J`},
 		{`Z`, `Y`},
 	}
 
-	g := AsGrid(input, ``)
+	g := New(input, ``)
 
 	assert.Equal(t, initExpected, g)
 
 	g = g.Rotate()
 
-	expected := Grid{
+	expected := Strings{
 		{`Z`, `I`, `E`, `A`},
 		{`Y`, `J`, `F`, `B`},
 	}

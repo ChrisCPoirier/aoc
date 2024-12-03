@@ -10,8 +10,8 @@ type text interface {
 	string | []byte
 }
 
-func AsGrid[T1, T2 text](in T1, sep T2) Grid {
-	grid := Grid{}
+func New[T1, T2 text](in T1, sep T2) Strings {
+	grid := Strings{}
 
 	for _, line := range strings.Split(string(in), "\n") {
 		grid = append(grid, strings.Split(line, string(sep)))
@@ -20,8 +20,8 @@ func AsGrid[T1, T2 text](in T1, sep T2) Grid {
 	return grid
 }
 
-func FieldsAsGrid[T1 text](s T1) Grid {
-	grid := Grid{}
+func FieldsAsGrid[T1 text](s T1) Strings {
+	grid := Strings{}
 
 	for _, line := range strings.Split(string(s), "\n") {
 		grid = append(grid, strings.Fields(line))
@@ -30,9 +30,9 @@ func FieldsAsGrid[T1 text](s T1) Grid {
 	return grid
 }
 
-type Grid [][]string
+type Strings [][]string
 
-func (g Grid) Pretty() string {
+func (g Strings) Pretty() string {
 	out := ``
 	for _, item := range g {
 		out += fmt.Sprintf("%s\n", strings.Join(item, " "))
@@ -59,7 +59,7 @@ func (g Floats) Pretty() string {
 
 }
 
-func (g Grid) AsGridI() Ints {
+func (g Strings) Ints() Ints {
 	n := Ints{}
 	for _, row := range g {
 		n = append(n, common.AsInts(row))
@@ -67,7 +67,7 @@ func (g Grid) AsGridI() Ints {
 	return n
 }
 
-func (g Grid) AsGridF() Floats {
+func (g Strings) Floats() Floats {
 	n := Floats{}
 	for _, row := range g {
 		n = append(n, common.AsFloats(row))
@@ -75,7 +75,7 @@ func (g Grid) AsGridF() Floats {
 	return n
 }
 
-func (g Grid) Rotate() Grid {
+func (g Strings) Rotate() Strings {
 	if len(g[0]) != len(g) {
 		return g.rotateUnequal()
 	}
@@ -94,8 +94,8 @@ func (g Grid) Rotate() Grid {
 	return g
 }
 
-func (g Grid) rotateUnequal() Grid {
-	n := make(Grid, len(g[0]))
+func (g Strings) rotateUnequal() Strings {
+	n := make(Strings, len(g[0]))
 	for _, row := range g {
 		for i, col := range row {
 			n[i] = append([]string{col}, n[i]...)
