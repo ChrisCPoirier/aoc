@@ -1,4 +1,4 @@
-package grid
+package matrix
 
 import (
 	"aoc/cmd/common"

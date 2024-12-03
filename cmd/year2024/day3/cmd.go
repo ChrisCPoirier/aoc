@@ -1,7 +1,7 @@
 package day3
 
 import (
-	"aoc/cmd/grid"
+	"aoc/cmd/matrix"
 	"fmt"
 	"math"
 	"os"
@@ -40,7 +40,7 @@ func execute(parent, command string) {
 func part1(s []byte) float64 {
 	score := 0.0
 
-	g := grid.
+	g := matrix.
 		New(string(s), "   ").
 		Rotate().
 		Floats()
@@ -58,7 +58,7 @@ func part1(s []byte) float64 {
 func part2(s []byte) float64 {
 	score := 0.0
 
-	g := grid.
+	g := matrix.
 		New(string(s), "   ").
 		Rotate().
 		Floats()

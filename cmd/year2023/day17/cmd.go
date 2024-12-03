@@ -1,7 +1,7 @@
 package day17
 
 import (
-	"aoc/cmd/grid"
+	"aoc/cmd/matrix"
 	"container/heap"
 	"fmt"
 	"os"
@@ -38,7 +38,7 @@ func execute(parent, command string) {
 func part1(s string, min, max int) int64 {
 	// var score int = 0
 
-	g := grid.New(s, "").Ints()
+	g := matrix.New(s, "").Ints()
 
 	pq := &PriorityQueue{}
 	heap.Init(pq)

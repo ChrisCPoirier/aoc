@@ -1,7 +1,7 @@
 package day11
 
 import (
-	"aoc/cmd/grid"
+	"aoc/cmd/matrix"
 	"fmt"
 	"os"
 
@@ -33,7 +33,7 @@ func execute(parent, command string) {
 
 func part1(s string, scale int) int64 {
 	// var score int64 = 0
-	m := grid.New(s, "")
+	m := matrix.New(s, "")
 
 	galaxies := [][]int{}
 

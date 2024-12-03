@@ -2,7 +2,7 @@ package day14
 
 import (
 	"aoc/cmd/common"
-	"aoc/cmd/grid"
+	"aoc/cmd/matrix"
 	"fmt"
 	"os"
 	"slices"
@@ -36,7 +36,7 @@ func execute(parent, command string) {
 func part1(s string, cycles int) int64 {
 	// var score int = 0
 
-	g := grid.New(s, "")
+	g := matrix.New(s, "")
 
 	fmt.Printf("init:\n%s\n", g.Pretty())
 
@@ -78,7 +78,7 @@ func part1(s string, cycles int) int64 {
 	return int64(score(g))
 }
 
-func slide(g grid.Strings) grid.Strings {
+func slide(g matrix.Strings) matrix.Strings {
 	for i, row := range g {
 
 		chunks := common.Chunk(row, `#`)
@@ -92,7 +92,7 @@ func slide(g grid.Strings) grid.Strings {
 	return g
 }
 
-func score(g grid.Strings) int {
+func score(g matrix.Strings) int {
 	score := 0
 	multipler := len(g)
 	for i, row := range g {

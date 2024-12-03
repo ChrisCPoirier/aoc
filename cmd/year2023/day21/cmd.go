@@ -1,7 +1,7 @@
 package day21
 
 import (
-	"aoc/cmd/grid"
+	"aoc/cmd/matrix"
 	"fmt"
 	"os"
 
@@ -40,7 +40,7 @@ func part1(s string, steps int, infinite bool) int64 {
 	// m := map[string][]int{}
 	// var score int = 0
 
-	g := grid.New(s, ``)
+	g := matrix.New(s, ``)
 
 	start := getStart(g)
 
@@ -51,7 +51,7 @@ func part1(s string, steps int, infinite bool) int64 {
 	return int64(score)
 }
 
-func walk(g grid.Strings, start []int, genDir []int, max int, infinite bool) int {
+func walk(g matrix.Strings, start []int, genDir []int, max int, infinite bool) int {
 	var u, d, l, r []int
 
 	if max < 0 {
@@ -126,7 +126,7 @@ func IsOposite(dir1 []int, dir2 []int) bool {
 	return false
 }
 
-func getStartFromOffset(g grid.Strings, s []int) []int {
+func getStartFromOffset(g matrix.Strings, s []int) []int {
 	newRow := s[0]
 	newColumn := s[1]
 
@@ -150,7 +150,7 @@ func getStartFromOffset(g grid.Strings, s []int) []int {
 	return []int{newRow, newColumn}
 }
 
-func validStep(g grid.Strings, s []int) bool {
+func validStep(g matrix.Strings, s []int) bool {
 
 	row := s[0]
 	column := s[1]
@@ -162,7 +162,7 @@ func validStep(g grid.Strings, s []int) bool {
 	return g[row][column] != `#`
 }
 
-func getStart(g grid.Strings) []int {
+func getStart(g matrix.Strings) []int {
 	for x, row := range g {
 		for y, c := range row {
 			if c == `S` {
