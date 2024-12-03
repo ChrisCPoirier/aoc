@@ -1,7 +1,7 @@
 package day17
 
 import (
-	"aoc/cmd/common"
+	"aoc/cmd/grid"
 	"container/heap"
 	"fmt"
 	"os"
@@ -38,7 +38,7 @@ func execute(parent, command string) {
 func part1(s string, min, max int) int64 {
 	// var score int = 0
 
-	g := common.AsGrid(s, "").AsGridI()
+	g := grid.AsGrid(s, "").AsGridI()
 
 	pq := &PriorityQueue{}
 	heap.Init(pq)

@@ -1,7 +1,7 @@
 package day16
 
 import (
-	"aoc/cmd/common"
+	"aoc/cmd/grid"
 	"fmt"
 	"os"
 
@@ -33,7 +33,7 @@ func execute(parent, command string) {
 func part1(s string) int64 {
 	// var score int = 0
 
-	g := common.AsGrid(s, "")
+	g := grid.AsGrid(s, "")
 
 	m := map[string]bool{}
 	beam(g, 0, 0, `right`, m)
@@ -44,7 +44,7 @@ func part1(s string) int64 {
 func part2(s string) int64 {
 	var score int = 0
 
-	g := common.AsGrid(s, "")
+	g := grid.AsGrid(s, "")
 
 	//left
 	for x := range g {
@@ -93,7 +93,7 @@ func part2(s string) int64 {
 	return int64(score)
 }
 
-func beam(g common.Grid, x, y int, direction string, m map[string]bool) {
+func beam(g grid.Grid, x, y int, direction string, m map[string]bool) {
 	if x < 0 || x > len(g)-1 || y < 0 || y > len(g[0])-1 {
 		return
 	}

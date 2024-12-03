@@ -1,6 +1,7 @@
-package common
+package grid
 
 import (
+	"aoc/cmd/common"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -64,9 +65,9 @@ func TestRandom(t *testing.T) {
 	}
 
 	for _, test := range tests {
-		chunks := Chunk(test.input, `#`)
+		chunks := common.Chunk(test.input, `#`)
 		assert.Equal(t, test.expected, chunks)
-		assert.Equal(t, test.input, Stitch(chunks, `#`))
+		assert.Equal(t, test.input, common.Stitch(chunks, `#`))
 	}
 
 }

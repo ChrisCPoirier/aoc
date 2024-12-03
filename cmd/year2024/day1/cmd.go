@@ -1,7 +1,7 @@
 package day1
 
 import (
-	"aoc/cmd/common"
+	"aoc/cmd/grid"
 	"fmt"
 	"math"
 	"os"
@@ -40,7 +40,7 @@ func execute(parent, command string) {
 func part1(s []byte) float64 {
 	score := 0.0
 
-	g := common.
+	g := grid.
 		AsGrid(s, "   ").
 		Rotate().
 		AsGridF()
@@ -58,7 +58,7 @@ func part1(s []byte) float64 {
 func part2(s []byte) float64 {
 	score := 0.0
 
-	g := common.
+	g := grid.
 		AsGrid(string(s), "   ").
 		Rotate().
 		AsGridF()

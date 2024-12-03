@@ -1,6 +1,7 @@
-package common
+package grid
 
 import (
+	"aoc/cmd/common"
 	"fmt"
 	"strings"
 )
@@ -40,7 +41,7 @@ func (g Grid) Pretty() string {
 
 }
 
-func (g GridI) Pretty() string {
+func (g Ints) Pretty() string {
 	out := ``
 	for _, item := range g {
 		out += fmt.Sprintf("%d\n", item)
@@ -49,7 +50,7 @@ func (g GridI) Pretty() string {
 
 }
 
-func (g GridF) Pretty() string {
+func (g Floats) Pretty() string {
 	out := ``
 	for _, item := range g {
 		out += fmt.Sprintf("%.0f\n", item)
@@ -58,18 +59,18 @@ func (g GridF) Pretty() string {
 
 }
 
-func (g Grid) AsGridI() GridI {
-	n := GridI{}
+func (g Grid) AsGridI() Ints {
+	n := Ints{}
 	for _, row := range g {
-		n = append(n, AsInts(row))
+		n = append(n, common.AsInts(row))
 	}
 	return n
 }
 
-func (g Grid) AsGridF() GridF {
-	n := GridF{}
+func (g Grid) AsGridF() Floats {
+	n := Floats{}
 	for _, row := range g {
-		n = append(n, AsFloats(row))
+		n = append(n, common.AsFloats(row))
 	}
 	return n
 }

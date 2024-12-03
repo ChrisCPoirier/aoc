@@ -1,7 +1,7 @@
 package day10
 
 import (
-	"aoc/cmd/common"
+	"aoc/cmd/grid"
 	"fmt"
 	"os"
 	"strings"
@@ -33,7 +33,7 @@ func execute(parent, command string) {
 
 func part1(s string) int64 {
 	// var score int64 = 0
-	m := common.AsGrid(s, "")
+	m := grid.AsGrid(s, "")
 
 	x, y := getStart(m)
 
@@ -167,7 +167,7 @@ func getStart(m [][]string) (int, int) {
 
 func part2(s string) int64 {
 	// var score int64 = 0
-	m := common.AsGrid(s, "")
+	m := grid.AsGrid(s, "")
 
 	x, y := getStart(m)
 

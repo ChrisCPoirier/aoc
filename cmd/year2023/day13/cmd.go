@@ -1,7 +1,7 @@
 package day13
 
 import (
-	"aoc/cmd/common"
+	"aoc/cmd/grid"
 	"fmt"
 	"os"
 	"strings"
@@ -37,7 +37,7 @@ func part1(s string, allowedImperfections int) int64 {
 	mirrors := [][][]string{}
 
 	for _, lines := range strings.Split(s, "\n\n") {
-		g := common.AsGrid(lines, "")
+		g := grid.AsGrid(lines, "")
 		mirrors = append(mirrors, g)
 	}
 
