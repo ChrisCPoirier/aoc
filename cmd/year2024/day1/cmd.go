@@ -1,12 +1,11 @@
 package day1
 
 import (
-	"bytes"
+	"aoc/cmd/common"
 	"fmt"
 	"math"
 	"os"
 	"slices"
-	"strconv"
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -38,32 +37,19 @@ func execute(parent, command string) {
 	logrus.Infof("score part2: %.0f", part2(b2))
 }
 
-func parseColumns(in []byte) ([]float64, []float64) {
-	a := []float64{}
-	b := []float64{}
-
-	for _, line := range bytes.Split(in, []byte("\n")) {
-
-		cols := bytes.Split(line, []byte("   "))
-
-		fa, _ := strconv.ParseFloat(string(cols[0]), 64)
-		fb, _ := strconv.ParseFloat(string(cols[1]), 64)
-		a = append(a, fa)
-		b = append(b, fb)
-	}
-	return a, b
-}
-
 func part1(s []byte) float64 {
 	score := 0.0
 
-	a, b := parseColumns(s)
+	g := common.
+		AsGrid(string(s), "   ").
+		Rotate().
+		AsGridF()
 
-	slices.Sort(a)
-	slices.Sort(b)
+	slices.Sort(g[0])
+	slices.Sort(g[1])
 
-	for i := range a {
-		score += math.Abs(a[i] - b[i])
+	for i := range g[0] {
+		score += math.Abs(g[0][i] - g[1][i])
 	}
 
 	return score
@@ -72,13 +58,16 @@ func part1(s []byte) float64 {
 func part2(s []byte) float64 {
 	score := 0.0
 
-	a, b := parseColumns(s)
+	g := common.
+		AsGrid(string(s), "   ").
+		Rotate().
+		AsGridF()
 
-	slices.Sort(a)
-	slices.Sort(b)
+	slices.Sort(g[0])
+	slices.Sort(g[1])
 
-	am := mapWithCount(a)
-	bm := mapWithCount(b)
+	am := mapWithCount(g[0])
+	bm := mapWithCount(g[1])
 
 	for k := range am {
 		score += (am[k] * k) * bm[k]

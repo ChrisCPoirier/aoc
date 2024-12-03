@@ -1,21 +1,20 @@
 package day2
 
 import (
-	"bytes"
+	"aoc/cmd/common"
 	"fmt"
 	"math"
 	"os"
 	"slices"
-	"strconv"
 
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
 var Cmd = &cobra.Command{
-	Use:   "day1",
-	Short: "day1",
-	Long:  `day1`,
+	Use:   "day2",
+	Short: "day2",
+	Long:  `day2`,
 	Run: func(cmd *cobra.Command, args []string) {
 		execute(cmd.Parent().Name(), cmd.Name())
 	},
@@ -34,64 +33,102 @@ func execute(parent, command string) {
 		logrus.Fatal(err)
 	}
 
-	logrus.Infof("score part1: %.0f", part1(b))
-	logrus.Infof("score part2: %.0f", part2(b2))
+	logrus.Infof("score part1: %d", part1(b))
+	logrus.Infof("score part2: %d", part2(b2))
+	logrus.Infof("score part2 bruteforce: %d", bruteForce(b2))
 }
 
-func parseColumns(in []byte) ([]float64, []float64) {
-	a := []float64{}
-	b := []float64{}
-	for _, line := range bytes.Split(in, []byte("\n")) {
+func part1(s []byte) int {
+	score := 0
 
-		cols := bytes.Split(line, []byte("   "))
+	g := common.AsGrid(string(s), " ").AsGridI()
 
-		fa, _ := strconv.ParseFloat(string(cols[0]), 64)
-		fb, _ := strconv.ParseFloat(string(cols[1]), 64)
-		a = append(a, fa)
-		b = append(b, fb)
-	}
-	return a, b
-}
+	for _, row := range g {
 
-func part1(s []byte) float64 {
-	score := 0.0
-
-	a, b := parseColumns(s)
-
-	slices.Sort(a)
-	slices.Sort(b)
-
-	for i := range a {
-		score += math.Abs(a[i] - b[i])
+		if getUnsafeIndex(row) == -1 {
+			score++
+		}
 	}
 
 	return score
 }
 
-func part2(s []byte) float64 {
-	score := 0.0
+func part2(s []byte) int {
+	score := 0
 
-	a, b := parseColumns(s)
+	g := common.AsGrid(string(s), " ").AsGridI()
 
-	slices.Sort(a)
-	slices.Sort(b)
+	for _, row := range g {
+		origUnsafe := getUnsafeIndex(row)
 
-	am := mapWithCount(a)
-	bm := mapWithCount(b)
+		if origUnsafe == -1 {
+			// logrus.WithField(`part`, 2).Infof("%#v", row)
+			score++
+			continue
+		}
 
-	for k := range am {
-		score += (am[k] * k) * bm[k]
+		for _, i := range []int{0, 1, -1} {
+			nrow := slices.Clone(row)
+			if origUnsafe+i < 0 || origUnsafe+i > len(row) {
+				continue
+			}
+			n := slices.Delete(nrow, origUnsafe+i, origUnsafe+i+1)
+
+			if getUnsafeIndex(n) == -1 {
+				// logrus.WithField(`part`, 2).Infof("%#v", row)
+				score++
+				break
+			}
+		}
 	}
 
 	return score
 }
 
-func mapWithCount(in []float64) map[float64]float64 {
-	out := map[float64]float64{}
+func bruteForce(s []byte) int {
+	score := 0
 
-	for _, a := range in {
-		out[a] = out[a] + 1
+	g := common.AsGrid(string(s), " ").AsGridI()
+
+	for _, row := range g {
+		for i := 0; i < len(row); i++ {
+			nrow := slices.Clone(row)
+			nrow = slices.Delete(nrow, i, i+1)
+			if getUnsafeIndex(nrow) == -1 {
+				// logrus.WithField(`part`, 3).Infof("%#v", row)
+				score++
+				break
+			}
+		}
 	}
 
-	return out
+	return score
+}
+
+func getUnsafeIndex(row []int) int {
+	slope := -1
+	if row[0]-row[1] < 0 {
+		slope = 1
+	}
+
+	for i := 1; i < len(row); i++ {
+		diff := row[i-1] - row[i]
+
+		if diff == 0 {
+
+			return i - 1
+		}
+
+		if math.Abs(float64(diff)) > 3.0 {
+
+			return i - 1
+		}
+
+		if diff*slope > 0 {
+
+			return i - 1
+		}
+	}
+
+	return -1
 }

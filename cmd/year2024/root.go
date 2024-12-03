@@ -2,6 +2,7 @@ package year2024
 
 import (
 	"aoc/cmd/year2024/day1"
+	"aoc/cmd/year2024/day2"
 	"fmt"
 	"os"
 
@@ -16,6 +17,7 @@ var Cmd = &cobra.Command{
 
 func init() {
 	Cmd.AddCommand(day1.Cmd)
+	Cmd.AddCommand(day2.Cmd)
 }
 
 func Execute() {
