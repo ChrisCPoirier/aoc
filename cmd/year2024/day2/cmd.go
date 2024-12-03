@@ -45,7 +45,7 @@ func part1(s []byte) int {
 
 	for _, row := range g {
 
-		if getUnsafeIndex(row) == -1 {
+		if getFirstUnsafeIndex(row) == -1 {
 			score++
 		}
 	}
@@ -59,23 +59,21 @@ func part2(s []byte) int {
 	g := common.AsGrid(string(s), " ").AsGridI()
 
 	for _, row := range g {
-		origUnsafe := getUnsafeIndex(row)
+		firstUnsafe := getFirstUnsafeIndex(row)
 
-		if origUnsafe == -1 {
-			// logrus.WithField(`part`, 2).Infof("%#v", row)
+		if firstUnsafe == -1 {
 			score++
 			continue
 		}
 
 		for _, i := range []int{0, 1, -1} {
 			nrow := slices.Clone(row)
-			if origUnsafe+i < 0 || origUnsafe+i > len(row) {
+			if firstUnsafe+i < 0 || firstUnsafe+i > len(row) {
 				continue
 			}
-			n := slices.Delete(nrow, origUnsafe+i, origUnsafe+i+1)
+			n := slices.Delete(nrow, firstUnsafe+i, firstUnsafe+i+1)
 
-			if getUnsafeIndex(n) == -1 {
-				// logrus.WithField(`part`, 2).Infof("%#v", row)
+			if getFirstUnsafeIndex(n) == -1 {
 				score++
 				break
 			}
@@ -94,8 +92,7 @@ func bruteForce(s []byte) int {
 		for i := 0; i < len(row); i++ {
 			nrow := slices.Clone(row)
 			nrow = slices.Delete(nrow, i, i+1)
-			if getUnsafeIndex(nrow) == -1 {
-				// logrus.WithField(`part`, 3).Infof("%#v", row)
+			if getFirstUnsafeIndex(nrow) == -1 {
 				score++
 				break
 			}
@@ -105,7 +102,7 @@ func bruteForce(s []byte) int {
 	return score
 }
 
-func getUnsafeIndex(row []int) int {
+func getFirstUnsafeIndex(row []int) int {
 	slope := -1
 	if row[0]-row[1] < 0 {
 		slope = 1

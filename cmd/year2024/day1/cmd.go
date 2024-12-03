@@ -41,7 +41,7 @@ func part1(s []byte) float64 {
 	score := 0.0
 
 	g := common.
-		AsGrid(string(s), "   ").
+		AsGrid(s, "   ").
 		Rotate().
 		AsGridF()
 

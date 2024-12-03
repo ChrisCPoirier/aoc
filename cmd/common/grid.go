@@ -5,20 +5,24 @@ import (
 	"strings"
 )
 
-func AsGrid(s, sep string) Grid {
+type text interface {
+	string | []byte
+}
+
+func AsGrid[T1, T2 text](in T1, sep T2) Grid {
 	grid := Grid{}
 
-	for _, line := range strings.Split(s, "\n") {
-		grid = append(grid, strings.Split(line, sep))
+	for _, line := range strings.Split(string(in), "\n") {
+		grid = append(grid, strings.Split(line, string(sep)))
 	}
 
 	return grid
 }
 
-func FieldsAsGrid(s string) Grid {
+func FieldsAsGrid[T1 text](s T1) Grid {
 	grid := Grid{}
 
-	for _, line := range strings.Split(s, "\n") {
+	for _, line := range strings.Split(string(s), "\n") {
 		grid = append(grid, strings.Fields(line))
 	}
 
