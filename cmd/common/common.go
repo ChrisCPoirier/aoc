@@ -1,7 +1,11 @@
 package common
 
 import (
+	"fmt"
+	"os"
 	"strconv"
+
+	"github.com/sirupsen/logrus"
 )
 
 func AsInts(items []string) []int {
@@ -72,4 +76,25 @@ func Counts[E comparable](in []E) map[E]int {
 	}
 
 	return out
+}
+
+func Run[T comparable](year, day string, part int, fn func([]byte) T) {
+	b, err := os.ReadFile(fmt.Sprintf(`cmd/year%s/%s/%d.txt`, year, day, part))
+
+	if err != nil {
+		logrus.Fatal(err)
+	}
+
+	result := fn(b)
+	switch v := any(result).(type) {
+	case string:
+		logrus.Infof("score part%d: %s", part, v)
+	case float64, float32:
+		logrus.Infof("score part%d: %.0f", part, v)
+	case int:
+		logrus.Infof("score part%d: %d", part, v)
+	default:
+		logrus.Infof("score part%d: %#v", part, v)
+	}
+
 }
