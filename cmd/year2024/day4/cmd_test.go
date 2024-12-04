@@ -16,9 +16,9 @@ func TestParts(t *testing.T) {
 	assert.NoError(t, err)
 
 	tests := []struct {
-		expected float64
+		expected int
 		input    []byte
-		fn       func([]byte) float64
+		fn       func([]byte) int
 	}{
 		{
 			expected: 18,
