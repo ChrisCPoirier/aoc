@@ -90,13 +90,13 @@ func Run[T comparable](year, day string, part int, fn func([]byte) T, message ..
 	result := fn(b)
 	switch v := any(result).(type) {
 	case string:
-		logrus.Infof("score part%d%s: %s", part, m, v)
+		logrus.Infof("score part %d%s: %s", part, m, v)
 	case float64, float32:
-		logrus.Infof("score part%d%s: %.0f", part, m, v)
+		logrus.Infof("score part %d%s: %.0f", part, m, v)
 	case int:
-		logrus.Infof("score part%d%s: %d", part, m, v)
+		logrus.Infof("score part %d%s: %d", part, m, v)
 	default:
-		logrus.Infof("score part%d%s: %#v", part, m, v)
+		logrus.Infof("score part %d%s: %#v", part, m, v)
 	}
 
 }
