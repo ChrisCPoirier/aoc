@@ -79,6 +79,14 @@ func Counts[E comparable](in []E) map[E]int {
 	return out
 }
 
+func Index[T comparable](in []T) map[T]int {
+	index := map[T]int{}
+	for i, c := range in {
+		index[c] = i
+	}
+	return index
+}
+
 func Run[T comparable](year, day string, part int, fn func([]byte) T, message ...string) {
 	b, err := os.ReadFile(fmt.Sprintf(`cmd/year%s/%s/%d.txt`, year, day, part))
 
