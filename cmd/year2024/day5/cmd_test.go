@@ -12,8 +12,8 @@ func TestParts(t *testing.T) {
 	b, err := os.ReadFile(`test.txt`)
 	assert.NoError(t, err)
 
-	// b2, err := os.ReadFile(`test2.txt`)
-	// assert.NoError(t, err)
+	b2, err := os.ReadFile(`test2.txt`)
+	assert.NoError(t, err)
 
 	tests := []struct {
 		expected int
@@ -21,15 +21,15 @@ func TestParts(t *testing.T) {
 		fn       func([]byte) int
 	}{
 		{
-			expected: 18,
+			expected: 143,
 			input:    b,
 			fn:       part1,
 		},
-		// {
-		// 	expected: 9,
-		// 	input:    b2,
-		// 	fn:       part2,
-		// },
+		{
+			expected: 123,
+			input:    b2,
+			fn:       part2,
+		},
 	}
 
 	for _, test := range tests {
