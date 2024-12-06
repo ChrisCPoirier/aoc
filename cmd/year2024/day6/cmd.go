@@ -3,10 +3,9 @@ package day6
 import (
 	"aoc/cmd/common"
 	"aoc/cmd/matrix"
+	"errors"
 	"fmt"
 	"slices"
-	"strconv"
-	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -27,27 +26,42 @@ func execute(parent, command string) {
 
 func part1(s []byte) int {
 	m := matrix.New(s, "")
+	pos := m.FindCell(`^`)
+	uniq, _ := getVisited(pos, m)
+	return len(uniq)
+}
 
-	pos := []int{}
-CENTER:
-	for i, r := range m {
-		for j, c := range r {
-			if c == "^" {
-				pos = []int{i, j}
-				m[i][j] = `.`
-				break CENTER
-			}
+var directions = [][]int{matrix.DIR_UP, matrix.DIR_RIGHT, matrix.DIR_DOWN, matrix.DIR_LEFT}
+
+type loc struct {
+	i, j int
+}
+
+func part2(s []byte) int {
+	score := 0
+
+	m := matrix.New(s, "")
+	pos := m.FindCell(`^`)
+
+	visited, _ := getVisited(slices.Clone(pos), m)
+
+	for _, v := range visited {
+		n := m.Clone()
+		n[v.i][v.j] = `#`
+
+		if _, err := getVisited(slices.Clone(pos), n); err != nil {
+			score++
 		}
 	}
 
-	return len(getVisited(pos, m))
+	return score
 }
 
-func getVisited(pos []int, m matrix.Strings) map[string]int {
-	uniq := map[string]int{}
-	uniq[fmt.Sprintf("%d:%d", pos[0], pos[1])]++
+func getVisited(pos []int, m matrix.Strings) (map[string]loc, error) {
+	uniq := map[string]loc{}
+	tracer := map[string]loc{}
+	uniq[fmt.Sprintf("%d:%d", pos[0], pos[1])] = loc{i: pos[0], j: pos[1]}
 
-	directions := [][]int{matrix.DIR_UP, matrix.DIR_RIGHT, matrix.DIR_DOWN, matrix.DIR_LEFT}
 	dir := 0
 	for {
 		pos[0] += directions[dir][0]
@@ -58,6 +72,11 @@ func getVisited(pos []int, m matrix.Strings) map[string]int {
 		}
 
 		if m[pos[0]][pos[1]] == `#` {
+			if _, ok := tracer[fmt.Sprintf("%d:%d:%d", pos[0], pos[1], dir)]; ok {
+				return uniq, errors.New("infinite loop")
+			}
+
+			tracer[fmt.Sprintf("%d:%d:%d", pos[0], pos[1], dir)] = loc{i: pos[0], j: pos[1]}
 
 			pos[0] -= directions[dir][0]
 			pos[1] -= directions[dir][1]
@@ -69,78 +88,8 @@ func getVisited(pos []int, m matrix.Strings) map[string]int {
 			continue
 		}
 
-		uniq[fmt.Sprintf("%d:%d", pos[0], pos[1])]++
+		uniq[fmt.Sprintf("%d:%d", pos[0], pos[1])] = loc{i: pos[0], j: pos[1]}
 	}
 
-	return uniq
-}
-
-func part2(s []byte) int {
-	score := 0
-	m := matrix.New(s, "")
-
-	pos := []int{}
-CENTER:
-	for i, r := range m {
-		for j, c := range r {
-			if c == "^" {
-				pos = []int{i, j}
-				break CENTER
-			}
-		}
-	}
-
-	visited := getVisited(slices.Clone(pos), m)
-
-	tests := []matrix.Strings{}
-	for k := range visited {
-		parts := strings.Split(k, `:`)
-
-		i, _ := strconv.Atoi(parts[0])
-		j, _ := strconv.Atoi(parts[1])
-		n := m.Clone()
-		n[i][j] = `#`
-		tests = append(tests, n)
-	}
-
-	for _, test := range tests {
-		if hasLoop(slices.Clone(pos), test) {
-			score++
-		}
-	}
-
-	return score
-}
-
-func hasLoop(pos []int, m matrix.Strings) bool {
-	uniq := map[string]int{}
-	uniq[fmt.Sprintf("%d:%d", pos[0], pos[1])]++
-
-	directions := [][]int{matrix.DIR_UP, matrix.DIR_RIGHT, matrix.DIR_DOWN, matrix.DIR_LEFT}
-	dir := 0
-	for {
-		pos[0] += directions[dir][0]
-		pos[1] += directions[dir][1]
-
-		if pos[0] < 0 || pos[0] >= len(m) || pos[1] < 0 || pos[1] >= len(m[0]) {
-			return false
-		}
-
-		if m[pos[0]][pos[1]] == `#` {
-			if _, ok := uniq[fmt.Sprintf("%d:%d:%d", pos[0], pos[1], dir)]; ok {
-				return true
-			}
-
-			uniq[fmt.Sprintf("%d:%d:%d", pos[0], pos[1], dir)]++
-			pos[0] -= directions[dir][0]
-			pos[1] -= directions[dir][1]
-			if dir == 3 {
-				dir = 0
-			} else {
-				dir++
-			}
-			continue
-		}
-	}
-	return false
+	return uniq, nil
 }

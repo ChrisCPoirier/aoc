@@ -42,6 +42,17 @@ func (g Strings) Pretty() string {
 
 }
 
+func (s Strings) FindCell(search string) []int {
+	for i, r := range s {
+		for j, c := range r {
+			if c == search {
+				return []int{i, j}
+			}
+		}
+	}
+	return []int{}
+}
+
 func (s Strings) Clone() Strings {
 	n := Strings{}
 	for _, r := range s {

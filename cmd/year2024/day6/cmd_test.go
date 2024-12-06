@@ -1,7 +1,6 @@
 package day6
 
 import (
-	"aoc/cmd/matrix"
 	"os"
 	"testing"
 
@@ -35,26 +34,5 @@ func TestParts(t *testing.T) {
 
 	for _, test := range tests {
 		assert.Equal(t, test.expected, test.fn(test.input))
-	}
-}
-
-func Test_hasLoop(t *testing.T) {
-	type args struct {
-		pos []int
-		m   matrix.Strings
-	}
-	tests := []struct {
-		name string
-		args args
-		want bool
-	}{
-		// TODO: Add test cases.
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := hasLoop(tt.args.pos, tt.args.m); got != tt.want {
-				t.Errorf("hasLoop() = %v, want %v", got, tt.want)
-			}
-		})
 	}
 }
