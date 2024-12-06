@@ -3,6 +3,7 @@ package matrix
 import (
 	"aoc/cmd/common"
 	"fmt"
+	"slices"
 	"strings"
 )
 
@@ -39,6 +40,14 @@ func (g Strings) Pretty() string {
 	}
 	return out
 
+}
+
+func (s Strings) Clone() Strings {
+	n := Strings{}
+	for _, r := range s {
+		n = append(n, slices.Clone(r))
+	}
+	return n
 }
 
 func (g Strings) Ints() Ints {
