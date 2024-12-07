@@ -87,6 +87,21 @@ func Index[T comparable](in []T) map[T]int {
 	return index
 }
 
+func Uniq[T comparable](in [][]T) [][]T {
+	k := map[string][]T{}
+	for _, items := range in {
+		k[fmt.Sprintf("%#v", items)] = items
+	}
+
+	u := [][]T{}
+
+	for _, v := range k {
+		u = append(u, v)
+	}
+
+	return u
+}
+
 func Run[T comparable](year, day string, part int, fn func([]byte) T, message ...string) {
 	b, err := os.ReadFile(fmt.Sprintf(`cmd/year%s/%s/%d.txt`, year, day, part))
 
