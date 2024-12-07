@@ -46,12 +46,11 @@ func part2(s []byte) int {
 	visited, _ := getVisited(slices.Clone(pos), m)
 
 	for _, v := range visited {
-		n := m.Clone()
-		n[v.i][v.j] = `#`
-
-		if _, err := getVisited(slices.Clone(pos), n); err != nil {
+		m[v.i][v.j] = `#`
+		if _, err := getVisited(slices.Clone(pos), m); err != nil {
 			score++
 		}
+		m[v.i][v.j] = `.`
 	}
 
 	return score
@@ -60,6 +59,7 @@ func part2(s []byte) int {
 func getVisited(pos []int, m matrix.Strings) (map[string]loc, error) {
 	uniq := map[string]loc{}
 	tracer := map[string]loc{}
+
 	uniq[fmt.Sprintf("%d:%d", pos[0], pos[1])] = loc{i: pos[0], j: pos[1]}
 
 	dir := 0
@@ -67,28 +67,29 @@ func getVisited(pos []int, m matrix.Strings) (map[string]loc, error) {
 		pos[0] += directions[dir][0]
 		pos[1] += directions[dir][1]
 
-		if pos[0] < 0 || pos[0] >= len(m) || pos[1] < 0 || pos[1] >= len(m[0]) {
+		if !m.InBound(pos[0], pos[1]) {
 			break
 		}
 
-		if m[pos[0]][pos[1]] == `#` {
-			if _, ok := tracer[fmt.Sprintf("%d:%d:%d", pos[0], pos[1], dir)]; ok {
-				return uniq, errors.New("infinite loop")
-			}
-
-			tracer[fmt.Sprintf("%d:%d:%d", pos[0], pos[1], dir)] = loc{i: pos[0], j: pos[1]}
-
-			pos[0] -= directions[dir][0]
-			pos[1] -= directions[dir][1]
-			if dir == 3 {
-				dir = 0
-			} else {
-				dir++
-			}
+		if m[pos[0]][pos[1]] != `#` {
+			uniq[fmt.Sprintf("%d:%d", pos[0], pos[1])] = loc{i: pos[0], j: pos[1]}
 			continue
 		}
 
-		uniq[fmt.Sprintf("%d:%d", pos[0], pos[1])] = loc{i: pos[0], j: pos[1]}
+		if _, ok := tracer[fmt.Sprintf("%d:%d:%d", pos[0], pos[1], dir)]; ok {
+			return uniq, errors.New("infinite loop")
+		}
+
+		tracer[fmt.Sprintf("%d:%d:%d", pos[0], pos[1], dir)] = loc{i: pos[0], j: pos[1]}
+
+		pos[0] -= directions[dir][0]
+		pos[1] -= directions[dir][1]
+		if dir == 3 {
+			dir = 0
+			continue
+		}
+
+		dir++
 	}
 
 	return uniq, nil
