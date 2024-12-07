@@ -42,6 +42,10 @@ func (g Strings) Pretty() string {
 
 }
 
+func (s Strings) InBound(i, j int) bool {
+	return !(i < 0 || i >= len(s) || j < 0 || j >= len(s[0]))
+}
+
 func (s Strings) FindCell(search string) []int {
 	for i, r := range s {
 		for j, c := range r {
