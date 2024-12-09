@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"slices"
 
+	"fyne.io/fyne/v2/app"
 	"github.com/spf13/cobra"
 )
 
@@ -25,7 +26,13 @@ func execute(parent, command string) {
 }
 
 func part1(s []byte) int {
+	myApp := app.New()
+	myWindow := myApp.NewWindow("visualize")
+
 	m := matrix.New(s, "")
+
+	m.Show(myWindow)
+	myWindow.ShowAndRun()
 	pos := m.FindCell(`^`)
 	uniq, _ := getVisited(pos, m)
 	return len(uniq)
