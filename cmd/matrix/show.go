@@ -10,7 +10,6 @@ import (
 )
 
 func (s Strings) Show(window fyne.Window) {
-	window.SetPadded(false)
 
 	squares := []fyne.CanvasObject{}
 
@@ -20,7 +19,6 @@ func (s Strings) Show(window fyne.Window) {
 		}
 	}
 
-	window.SetPadded(false)
 	c := container.New(common.NewGridLayout(len(s)), squares...)
 
 	window.SetContent(c)
