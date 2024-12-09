@@ -9,24 +9,25 @@ import (
 	"fyne.io/fyne/v2/container"
 )
 
-func (s Strings) Show(window fyne.Window) {
+func (s Strings) Fyne(window fyne.Window) *fyne.Container {
 
 	squares := []fyne.CanvasObject{}
 
 	for _, r := range s {
 		for _, v := range r {
-			squares = append(squares, newSquare(v))
+			squares = append(squares, NewSquare(v, color.RGBA{0, 0, 0, 100}))
 		}
 	}
 
 	c := container.New(common.NewGridLayout(len(s)), squares...)
 
 	window.SetContent(c)
+	return c
 }
 
-func newSquare(s string) fyne.CanvasObject {
+func NewSquare(s string, c color.RGBA) fyne.CanvasObject {
 	// color.RGBA{234, 239, 44, 100} // yellow
-	sqr := canvas.NewRectangle(color.Black)
+	sqr := canvas.NewRectangle(c)
 	sqr.Resize(
 		fyne.Size{
 			Width:  1,
