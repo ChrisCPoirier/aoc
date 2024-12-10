@@ -59,6 +59,8 @@ func part1(s []byte) int {
 	return score
 }
 
+var directions = matrix.DIR_CROSS
+
 func part2(s []byte) int {
 	m := matrix.New(s, ``).Ints()
 
@@ -75,10 +77,9 @@ func part2(s []byte) int {
 	trailEnds := map[string][][]int{}
 	for _, trailhead := range trailheads {
 		ends := [][]int{}
-		ends = append(ends, step(trailhead, matrix.DIR_UP, m)...)
-		ends = append(ends, step(trailhead, matrix.DIR_DOWN, m)...)
-		ends = append(ends, step(trailhead, matrix.DIR_LEFT, m)...)
-		ends = append(ends, step(trailhead, matrix.DIR_RIGHT, m)...)
+		for _, direction := range matrix.DIR_CROSS {
+			ends = append(ends, step(trailhead, direction, m)...)
+		}
 		trailEnds[fmt.Sprintf("%d:%d", trailhead[0], trailhead[1])] = ends
 	}
 
@@ -107,10 +108,10 @@ func step(pos, dir []int, m matrix.Ints) [][]int {
 		return [][]int{{nr, nc}}
 	}
 	ends := [][]int{}
-	ends = append(ends, step([]int{nr, nc}, matrix.DIR_UP, m)...)
-	ends = append(ends, step([]int{nr, nc}, matrix.DIR_DOWN, m)...)
-	ends = append(ends, step([]int{nr, nc}, matrix.DIR_LEFT, m)...)
-	ends = append(ends, step([]int{nr, nc}, matrix.DIR_RIGHT, m)...)
+	for _, direction := range matrix.DIR_CROSS {
+		ends = append(ends, step([]int{nr, nc}, direction, m)...)
+	}
+
 	return ends
 
 }
