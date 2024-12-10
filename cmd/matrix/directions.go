@@ -23,9 +23,9 @@ var DIR_X = [][][]int{
 	{DIR_DOWN, DIR_RIGHT},
 }
 
-var DIR_CROSS = [][][]int{
-	{DIR_UP},
-	{DIR_DOWN},
-	{DIR_LEFT},
-	{DIR_RIGHT},
+var DIR_CROSS = [][]int{
+	DIR_UP,
+	DIR_DOWN,
+	DIR_LEFT,
+	DIR_RIGHT,
 }
