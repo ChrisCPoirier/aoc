@@ -29,29 +29,8 @@ type block struct {
 
 func part1(s []byte) int {
 	m := matrix.New(s, ``).Ints()
-
-	trailheads := [][]int{}
-
-	for r, row := range m {
-		for c, v := range row {
-			if v == 0 {
-				trailheads = append(trailheads, []int{r, c})
-			}
-		}
-	}
-
-	trailEnds := map[string][][]int{}
-	for _, trailhead := range trailheads {
-		ends := [][]int{}
-		ends = append(ends, step(trailhead, matrix.DIR_UP, m)...)
-		ends = append(ends, step(trailhead, matrix.DIR_DOWN, m)...)
-		ends = append(ends, step(trailhead, matrix.DIR_LEFT, m)...)
-		ends = append(ends, step(trailhead, matrix.DIR_RIGHT, m)...)
-		trailEnds[fmt.Sprintf("%d:%d", trailhead[0], trailhead[1])] = ends
-	}
-
 	score := 0
-	for _, ends := range trailEnds {
+	for _, ends := range trailEnds(trailHeads(m), m) {
 		ends = common.Uniq(ends)
 		score += len(ends)
 	}
@@ -63,9 +42,17 @@ var directions = matrix.DIR_CROSS
 
 func part2(s []byte) int {
 	m := matrix.New(s, ``).Ints()
+	score := 0
+	for _, ends := range trailEnds(trailHeads(m), m) {
+		// ends = common.Uniq(ends)
+		score += len(ends)
+	}
 
+	return score
+}
+
+func trailHeads(m matrix.Ints) [][]int {
 	trailheads := [][]int{}
-
 	for r, row := range m {
 		for c, v := range row {
 			if v == 0 {
@@ -73,7 +60,10 @@ func part2(s []byte) int {
 			}
 		}
 	}
+	return trailheads
+}
 
+func trailEnds(trailheads [][]int, m matrix.Ints) map[string][][]int {
 	trailEnds := map[string][][]int{}
 	for _, trailhead := range trailheads {
 		ends := [][]int{}
@@ -82,14 +72,7 @@ func part2(s []byte) int {
 		}
 		trailEnds[fmt.Sprintf("%d:%d", trailhead[0], trailhead[1])] = ends
 	}
-
-	score := 0
-	for _, ends := range trailEnds {
-		// ends = common.Uniq(ends)
-		score += len(ends)
-	}
-
-	return score
+	return trailEnds
 }
 
 func step(pos, dir []int, m matrix.Ints) [][]int {
