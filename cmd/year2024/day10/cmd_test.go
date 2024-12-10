@@ -21,12 +21,12 @@ func TestParts(t *testing.T) {
 		fn       func([]byte) int
 	}{
 		{
-			expected: 1928,
+			expected: 36,
 			input:    b,
 			fn:       part1,
 		},
 		{
-			expected: 2858,
+			expected: 81,
 			input:    b,
 			fn:       part2,
 		},

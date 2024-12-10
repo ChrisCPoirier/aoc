@@ -2,7 +2,8 @@ package day10
 
 import (
 	"aoc/cmd/common"
-	"strings"
+	"aoc/cmd/matrix"
+	"fmt"
 
 	"github.com/spf13/cobra"
 )
@@ -27,11 +28,89 @@ type block struct {
 }
 
 func part1(s []byte) int {
-	in := strings.Split(string(s), ``)
+	m := matrix.New(s, ``).Ints()
 
-	return len(in)
+	trailheads := [][]int{}
+
+	for r, row := range m {
+		for c, v := range row {
+			if v == 0 {
+				trailheads = append(trailheads, []int{r, c})
+			}
+		}
+	}
+
+	trailEnds := map[string][][]int{}
+	for _, trailhead := range trailheads {
+		ends := [][]int{}
+		ends = append(ends, step(trailhead, matrix.DIR_UP, m)...)
+		ends = append(ends, step(trailhead, matrix.DIR_DOWN, m)...)
+		ends = append(ends, step(trailhead, matrix.DIR_LEFT, m)...)
+		ends = append(ends, step(trailhead, matrix.DIR_RIGHT, m)...)
+		trailEnds[fmt.Sprintf("%d:%d", trailhead[0], trailhead[1])] = ends
+	}
+
+	score := 0
+	for _, ends := range trailEnds {
+		ends = common.Uniq(ends)
+		score += len(ends)
+	}
+
+	return score
 }
 
 func part2(s []byte) int {
-	return part1(s)
+	m := matrix.New(s, ``).Ints()
+
+	trailheads := [][]int{}
+
+	for r, row := range m {
+		for c, v := range row {
+			if v == 0 {
+				trailheads = append(trailheads, []int{r, c})
+			}
+		}
+	}
+
+	trailEnds := map[string][][]int{}
+	for _, trailhead := range trailheads {
+		ends := [][]int{}
+		ends = append(ends, step(trailhead, matrix.DIR_UP, m)...)
+		ends = append(ends, step(trailhead, matrix.DIR_DOWN, m)...)
+		ends = append(ends, step(trailhead, matrix.DIR_LEFT, m)...)
+		ends = append(ends, step(trailhead, matrix.DIR_RIGHT, m)...)
+		trailEnds[fmt.Sprintf("%d:%d", trailhead[0], trailhead[1])] = ends
+	}
+
+	score := 0
+	for _, ends := range trailEnds {
+		// ends = common.Uniq(ends)
+		score += len(ends)
+	}
+
+	return score
+}
+
+func step(pos, dir []int, m matrix.Ints) [][]int {
+	nr := pos[0] + dir[0]
+	nc := pos[1] + dir[1]
+
+	if !m.InBound(nr, nc) {
+		return [][]int{}
+	}
+
+	if m[nr][nc]-m[pos[0]][pos[1]] != 1 {
+		return [][]int{}
+	}
+
+	if m[nr][nc] == 9 {
+		return [][]int{{nr, nc}}
+	}
+	ends := [][]int{}
+	ends = append(ends, step([]int{nr, nc}, matrix.DIR_UP, m)...)
+	ends = append(ends, step([]int{nr, nc}, matrix.DIR_DOWN, m)...)
+	ends = append(ends, step([]int{nr, nc}, matrix.DIR_LEFT, m)...)
+	ends = append(ends, step([]int{nr, nc}, matrix.DIR_RIGHT, m)...)
+	return ends
+
 }
