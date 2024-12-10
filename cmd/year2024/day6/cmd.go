@@ -2,6 +2,7 @@ package day6
 
 import (
 	"aoc/cmd/common"
+	"aoc/cmd/display"
 	"aoc/cmd/matrix"
 	"errors"
 	"fmt"
@@ -9,10 +10,7 @@ import (
 	"sync"
 	"time"
 
-	"image/color"
-
-	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/app"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -28,7 +26,7 @@ var Cmd = &cobra.Command{
 func execute(parent, command string) {
 	common.Run(parent, command, 1, part1)
 	common.Run(parent, command, 2, part2)
-	// common.Run(parent, command, 1, visualizePart1)
+	common.Run(parent, command, 1, visualizePart1)
 	// common.Run(parent, command, 2, visualizePart2)
 
 }
@@ -116,26 +114,15 @@ func getVisited(pos []int, m matrix.Strings) ([][]int, error) {
 func visualizePart1(s []byte) int {
 	wg := &sync.WaitGroup{}
 	m := matrix.New(s, "")
-
-	myApp := app.New()
-	myWindow := myApp.NewWindow("visualize")
-	c := m.Fyne(myWindow)
+	d := display.New(m)
 
 	pos := m.FindCell(`^`)
-	wg.Add(1)
-
 	visited, _ := getVisited(pos, m)
 
 	time.Sleep(time.Second * 3)
-	go func() {
-		for _, visit := range visited {
-			time.Sleep(10 * time.Millisecond)
-			c.Objects[visit[1]+(len(m[0])*visit[0])] = matrix.NewSquare(m[visit[0]][visit[1]], YELLOW)
-		}
-		wg.Done()
-	}()
+	go d.ColorCells(visited, display.GREEN)
 
-	myWindow.ShowAndRun()
+	d.ShowAndRun()
 	wg.Wait()
 	return len(uniq(visited))
 }
@@ -143,9 +130,7 @@ func visualizePart1(s []byte) int {
 func visualizePart2(s []byte) int {
 	score := 0
 	m := matrix.New(s, "")
-	myApp := app.New()
-	myWindow := myApp.NewWindow("visualize")
-	c := m.Fyne(myWindow)
+	d := display.New(m)
 
 	pos := m.FindCell(`^`)
 
@@ -153,54 +138,24 @@ func visualizePart2(s []byte) int {
 
 	time.Sleep(3 * time.Second)
 	go func() {
-		for _, v := range uniq(visited) {
+		for i, v := range uniq(visited) {
+			logrus.Infof("uniq visited %s", i)
 			m[v.i][v.j] = `#`
-			fillCell(c, m, v.i, v.j, BLUE)
+			d.ColorCell(v.i, v.j, display.BLUE)
 			newPath, err := getVisited(slices.Clone(pos), m)
 			if err != nil {
-				fill(c, m, newPath, RED)
+				d.ColorCells(newPath, display.RED)
 				score++
 			} else {
-				fill(c, m, newPath, YELLOW)
+				d.ColorCells(newPath, display.GREEN)
 			}
 			time.Sleep(time.Second * 2)
 			m[v.i][v.j] = `.`
-			fillNoWait(c, m, newPath, BLACK)
+			d.ColorCell(v.i, v.j, display.BLACK)
+			d.ColorCellsNoWait(newPath, display.BLACK)
 		}
 	}()
 
-	myWindow.ShowAndRun()
+	d.ShowAndRun()
 	return score
-}
-
-var BLACK = color.RGBA{0, 0, 0, 100}
-var YELLOW = color.RGBA{234, 239, 44, 100}
-var RED = color.RGBA{255, 0, 0, 100}
-var BLUE = color.RGBA{0, 0, 255, 100}
-
-func reset(cont *fyne.Container, m matrix.Strings, cl color.RGBA) {
-	for r, items := range m {
-		for c := range items {
-			fillCell(cont, m, r, c, cl)
-		}
-	}
-}
-
-func fillCell(cont *fyne.Container, m matrix.Strings, r, c int, cl color.RGBA) {
-	cont.Objects[c+(len(m[r])*r)] = matrix.NewSquare(m[r][c], cl)
-}
-
-func fill(cont *fyne.Container, m matrix.Strings, cells [][]int, cl color.RGBA) {
-	for _, cell := range cells {
-		time.Sleep(time.Millisecond * 10)
-		fillCell(cont, m, cell[0], cell[1], cl)
-	}
-
-}
-
-func fillNoWait(cont *fyne.Container, m matrix.Strings, cells [][]int, cl color.RGBA) {
-	for _, cell := range cells {
-		fillCell(cont, m, cell[0], cell[1], cl)
-	}
-
 }
