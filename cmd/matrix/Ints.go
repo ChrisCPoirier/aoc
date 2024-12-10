@@ -12,3 +12,7 @@ func (g Ints) Pretty() string {
 	return out
 
 }
+
+func (in Ints) InBound(i, j int) bool {
+	return !(i < 0 || i >= len(in) || j < 0 || j >= len(in[0]))
+}
