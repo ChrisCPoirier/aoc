@@ -1,6 +1,7 @@
 package year2024
 
 import (
+	"aoc/cmd/year2023/day11"
 	"aoc/cmd/year2024/day1"
 	"aoc/cmd/year2024/day10"
 	"aoc/cmd/year2024/day2"
@@ -34,6 +35,7 @@ func init() {
 	Cmd.AddCommand(day8.Cmd)
 	Cmd.AddCommand(day9.Cmd)
 	Cmd.AddCommand(day10.Cmd)
+	Cmd.AddCommand(day11.Cmd)
 }
 
 func Execute() {
