@@ -1,4 +1,4 @@
-package day10
+package day11
 
 import (
 	"os"
@@ -21,7 +21,7 @@ func TestParts(t *testing.T) {
 		fn       func([]byte) int
 	}{
 		{
-			expected: 36,
+			expected: 55312,
 			input:    b,
 			fn:       part1,
 		},

@@ -1,9 +1,9 @@
 package year2024
 
 import (
-	"aoc/cmd/year2023/day11"
 	"aoc/cmd/year2024/day1"
 	"aoc/cmd/year2024/day10"
+	"aoc/cmd/year2024/day11"
 	"aoc/cmd/year2024/day2"
 	"aoc/cmd/year2024/day3"
 	"aoc/cmd/year2024/day4"
