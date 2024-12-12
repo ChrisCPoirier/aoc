@@ -18,15 +18,15 @@ func TestParts(t *testing.T) {
 		fn       func([]byte) int
 	}{
 		{
-			expected: 10,
+			expected: 1930,
 			input:    b,
 			fn:       part1,
 		},
-		// {
-		// 	expected: 81,
-		// 	input:    b,
-		// 	fn:       part2,
-		// },
+		{
+			expected: 1206,
+			input:    b,
+			fn:       part2,
+		},
 	}
 
 	for _, test := range tests {

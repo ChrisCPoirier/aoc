@@ -42,6 +42,10 @@ func (g Strings) Pretty() string {
 
 }
 
+func Key(r, c int) string {
+	return fmt.Sprintf("%d:%d", r, c)
+}
+
 func (s Strings) InBound(i, j int) bool {
 	return !(i < 0 || i >= len(s) || j < 0 || j >= len(s[0]))
 }
