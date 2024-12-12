@@ -1,7 +1,7 @@
 package display
 
 import (
-	"aoc/cmd/matrix"
+	"aoc/cmd/grid"
 	"image/color"
 	"time"
 
@@ -15,18 +15,18 @@ var RED = color.RGBA{255, 0, 0, 255}
 var BLUE = color.RGBA{0, 0, 255, 255}
 
 type display struct {
-	Matrix    matrix.Strings
+	Grid      grid.Strings
 	app       fyne.App
 	window    fyne.Window
 	container *fyne.Container
 }
 
-func New(m matrix.Strings) display {
+func New(m grid.Strings) display {
 	myApp := app.New()
 	myWindow := myApp.NewWindow("visualize")
 	c := m.Fyne(myWindow)
 
-	return display{app: myApp, window: myWindow, container: c, Matrix: m}
+	return display{app: myApp, window: myWindow, container: c, Grid: m}
 }
 
 func (d display) ShowAndRun() {
@@ -34,7 +34,7 @@ func (d display) ShowAndRun() {
 }
 
 func (d display) ColorCell(r, c int, cl color.RGBA) {
-	d.container.Objects[c+(len(d.Matrix[r])*r)] = matrix.NewSquare(d.Matrix[r][c], cl)
+	d.container.Objects[c+(len(d.Grid[r])*r)] = grid.NewSquare(d.Grid[r][c], cl)
 }
 
 func (d display) ColorCells(cells [][]int, cl color.RGBA) {
@@ -45,7 +45,7 @@ func (d display) ColorCells(cells [][]int, cl color.RGBA) {
 }
 
 func (d display) Reset() {
-	for r, items := range d.Matrix {
+	for r, items := range d.Grid {
 		for c := range items {
 			d.ColorCell(r, c, BLACK)
 		}

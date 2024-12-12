@@ -2,7 +2,7 @@ package day10
 
 import (
 	"aoc/cmd/common"
-	"aoc/cmd/matrix"
+	"aoc/cmd/grid"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -23,9 +23,9 @@ func execute(parent, command string) {
 }
 
 func part1(s []byte) int {
-	m := matrix.New(s, ``).Ints()
+	g := grid.New(s, ``).Ints()
 	score := 0
-	for _, ends := range trailEnds(trailHeads(m), m) {
+	for _, ends := range trailEnds(trailHeads(g), g) {
 		ends = common.Uniq(ends)
 		score += len(ends)
 	}
@@ -33,12 +33,12 @@ func part1(s []byte) int {
 	return score
 }
 
-var directions = matrix.DIR_CROSS
+var directions = grid.DIR_CROSS
 
 func part2(s []byte) int {
-	m := matrix.New(s, ``).Ints()
+	g := grid.New(s, ``).Ints()
 	score := 0
-	for _, ends := range trailEnds(trailHeads(m), m) {
+	for _, ends := range trailEnds(trailHeads(g), g) {
 		// ends = common.Uniq(ends)
 		score += len(ends)
 	}
@@ -46,7 +46,7 @@ func part2(s []byte) int {
 	return score
 }
 
-func trailHeads(m matrix.Ints) [][]int {
+func trailHeads(m grid.Ints) [][]int {
 	trailheads := [][]int{}
 	for r, row := range m {
 		for c, v := range row {
@@ -58,11 +58,11 @@ func trailHeads(m matrix.Ints) [][]int {
 	return trailheads
 }
 
-func trailEnds(trailheads [][]int, m matrix.Ints) map[string][][]int {
+func trailEnds(trailheads [][]int, m grid.Ints) map[string][][]int {
 	trailEnds := map[string][][]int{}
 	for _, trailhead := range trailheads {
 		ends := [][]int{}
-		for _, direction := range matrix.DIR_CROSS {
+		for _, direction := range grid.DIR_CROSS {
 			ends = append(ends, step(trailhead, direction, m)...)
 		}
 		trailEnds[fmt.Sprintf("%d:%d", trailhead[0], trailhead[1])] = ends
@@ -70,7 +70,7 @@ func trailEnds(trailheads [][]int, m matrix.Ints) map[string][][]int {
 	return trailEnds
 }
 
-func step(pos, dir []int, m matrix.Ints) [][]int {
+func step(pos, dir []int, m grid.Ints) [][]int {
 	nr := pos[0] + dir[0]
 	nc := pos[1] + dir[1]
 
@@ -86,7 +86,7 @@ func step(pos, dir []int, m matrix.Ints) [][]int {
 		return [][]int{{nr, nc}}
 	}
 	ends := [][]int{}
-	for _, direction := range matrix.DIR_CROSS {
+	for _, direction := range grid.DIR_CROSS {
 		ends = append(ends, step([]int{nr, nc}, direction, m)...)
 	}
 

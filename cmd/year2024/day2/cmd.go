@@ -2,7 +2,7 @@ package day2
 
 import (
 	"aoc/cmd/common"
-	"aoc/cmd/matrix"
+	"aoc/cmd/grid"
 	"math"
 	"slices"
 
@@ -27,7 +27,7 @@ func execute(parent, command string) {
 func part1(s []byte) int {
 	score := 0
 
-	g := matrix.New(string(s), " ").Ints()
+	g := grid.New(string(s), " ").Ints()
 
 	for _, row := range g {
 
@@ -42,7 +42,7 @@ func part1(s []byte) int {
 func part2(s []byte) int {
 	score := 0
 
-	g := matrix.New(string(s), " ").Ints()
+	g := grid.New(string(s), " ").Ints()
 
 	for _, row := range g {
 		firstUnsafe := getFirstUnsafeIndex(row)
@@ -72,7 +72,7 @@ func part2(s []byte) int {
 func bruteForce(s []byte) int {
 	score := 0
 
-	g := matrix.New(string(s), " ").Ints()
+	g := grid.New(string(s), " ").Ints()
 
 	for _, row := range g {
 		for i := 0; i < len(row); i++ {

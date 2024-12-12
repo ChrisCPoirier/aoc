@@ -1,7 +1,7 @@
 package day13
 
 import (
-	"aoc/cmd/matrix"
+	"aoc/cmd/grid"
 	"fmt"
 	"os"
 	"strings"
@@ -37,7 +37,7 @@ func part1(s string, allowedImperfections int) int64 {
 	mirrors := [][][]string{}
 
 	for _, lines := range strings.Split(s, "\n\n") {
-		g := matrix.New(lines, "")
+		g := grid.New(lines, "")
 		mirrors = append(mirrors, g)
 	}
 

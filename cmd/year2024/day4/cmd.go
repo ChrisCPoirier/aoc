@@ -2,7 +2,7 @@ package day4
 
 import (
 	"aoc/cmd/common"
-	"aoc/cmd/matrix"
+	"aoc/cmd/grid"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -26,15 +26,15 @@ var XMAS = []string{`X`, `M`, `A`, `S`}
 var MAS = []string{`M`, `A`, `S`}
 
 func part1(s []byte) int {
-	m := matrix.New(s, ``)
-	found := find(m, XMAS, matrix.DIR_ALL...)
+	g := grid.New(s, ``)
+	found := find(g, XMAS, grid.DIR_ALL...)
 	return len(found)
 }
 
 func part2(s []byte) int {
 	score := 0
-	m := matrix.New(s, ``)
-	found := find(m, MAS, matrix.DIR_X...)
+	g := grid.New(s, ``)
+	found := find(g, MAS, grid.DIR_X...)
 
 	xs := map[string]int{}
 
@@ -49,7 +49,7 @@ func part2(s []byte) int {
 	return score
 }
 
-func find(m matrix.Strings, word []string, allowedDirections ...[][]int) [][][]int {
+func find(m grid.Strings, word []string, allowedDirections ...[][]int) [][][]int {
 	found := [][][]int{}
 	for i, row := range m {
 		for j, c := range row {
@@ -67,7 +67,7 @@ func find(m matrix.Strings, word []string, allowedDirections ...[][]int) [][][]i
 	return found
 }
 
-func findNext(m matrix.Strings, word []string, pos, i, j int, stack [][]int, directions ...[]int) (bool, [][]int) {
+func findNext(m grid.Strings, word []string, pos, i, j int, stack [][]int, directions ...[]int) (bool, [][]int) {
 	if pos > len(word)-1 {
 		return true, stack
 	}

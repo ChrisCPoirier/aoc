@@ -3,7 +3,7 @@ package day6
 import (
 	"aoc/cmd/common"
 	"aoc/cmd/display"
-	"aoc/cmd/matrix"
+	"aoc/cmd/grid"
 	"errors"
 	"fmt"
 	"slices"
@@ -32,14 +32,14 @@ func execute(parent, command string) {
 }
 
 func part1(s []byte) int {
-	m := matrix.New(s, "")
-	pos := m.FindCell(`^`)
-	visited, _ := getVisited(pos, m)
+	g := grid.New(s, "")
+	pos := g.FindCell(`^`)
+	visited, _ := getVisited(pos, g)
 	uniq := uniq(visited)
 	return len(uniq)
 }
 
-var directions = [][]int{matrix.DIR_UP, matrix.DIR_RIGHT, matrix.DIR_DOWN, matrix.DIR_LEFT}
+var directions = [][]int{grid.DIR_UP, grid.DIR_RIGHT, grid.DIR_DOWN, grid.DIR_LEFT}
 
 type loc struct {
 	i, j int
@@ -48,17 +48,17 @@ type loc struct {
 func part2(s []byte) int {
 	score := 0
 
-	m := matrix.New(s, "")
-	pos := m.FindCell(`^`)
+	g := grid.New(s, "")
+	pos := g.FindCell(`^`)
 
-	visited, _ := getVisited(slices.Clone(pos), m)
+	visited, _ := getVisited(slices.Clone(pos), g)
 
 	for _, v := range uniq(visited) {
-		m[v.i][v.j] = `#`
-		if _, err := getVisited(slices.Clone(pos), m); err != nil {
+		g[v.i][v.j] = `#`
+		if _, err := getVisited(slices.Clone(pos), g); err != nil {
 			score++
 		}
-		m[v.i][v.j] = `.`
+		g[v.i][v.j] = `.`
 	}
 
 	return score
@@ -72,7 +72,7 @@ func uniq(in [][]int) map[string]loc {
 	return uniq
 }
 
-func getVisited(pos []int, m matrix.Strings) ([][]int, error) {
+func getVisited(pos []int, m grid.Strings) ([][]int, error) {
 	visited := [][]int{}
 	tracer := map[string]loc{}
 
@@ -113,11 +113,11 @@ func getVisited(pos []int, m matrix.Strings) ([][]int, error) {
 
 func visualizePart1(s []byte) int {
 	wg := &sync.WaitGroup{}
-	m := matrix.New(s, "")
-	d := display.New(m)
+	g := grid.New(s, "")
+	d := display.New(g)
 
-	pos := m.FindCell(`^`)
-	visited, _ := getVisited(pos, m)
+	pos := g.FindCell(`^`)
+	visited, _ := getVisited(pos, g)
 
 	time.Sleep(time.Second * 3)
 	go d.ColorCells(visited, display.GREEN)
@@ -129,20 +129,20 @@ func visualizePart1(s []byte) int {
 
 func visualizePart2(s []byte) int {
 	score := 0
-	m := matrix.New(s, "")
-	d := display.New(m)
+	g := grid.New(s, "")
+	d := display.New(g)
 
-	pos := m.FindCell(`^`)
+	pos := g.FindCell(`^`)
 
-	visited, _ := getVisited(slices.Clone(pos), m)
+	visited, _ := getVisited(slices.Clone(pos), g)
 
 	time.Sleep(3 * time.Second)
 	go func() {
 		for i, v := range uniq(visited) {
 			logrus.Infof("uniq visited %s", i)
-			m[v.i][v.j] = `#`
+			g[v.i][v.j] = `#`
 			d.ColorCell(v.i, v.j, display.BLUE)
-			newPath, err := getVisited(slices.Clone(pos), m)
+			newPath, err := getVisited(slices.Clone(pos), g)
 			if err != nil {
 				d.ColorCells(newPath, display.RED)
 				score++
@@ -150,7 +150,7 @@ func visualizePart2(s []byte) int {
 				d.ColorCells(newPath, display.GREEN)
 			}
 			time.Sleep(time.Second * 2)
-			m[v.i][v.j] = `.`
+			g[v.i][v.j] = `.`
 			d.ColorCell(v.i, v.j, display.BLACK)
 			d.ColorCellsNoWait(newPath, display.BLACK)
 		}

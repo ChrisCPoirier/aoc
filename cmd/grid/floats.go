@@ -1,4 +1,4 @@
-package matrix
+package grid
 
 import "fmt"
 

@@ -1,7 +1,7 @@
 package day10
 
 import (
-	"aoc/cmd/matrix"
+	"aoc/cmd/grid"
 	"fmt"
 	"os"
 	"strings"
@@ -33,9 +33,9 @@ func execute(parent, command string) {
 
 func part1(s string) int64 {
 	// var score int64 = 0
-	m := matrix.New(s, "")
+	g := grid.New(s, "")
 
-	x, y := getStart(m)
+	x, y := getStart(g)
 
 	// fmt.Printf("%#v %d %d", m, y, x)
 	visited := map[string]bool{}
@@ -43,10 +43,10 @@ func part1(s string) int64 {
 	// visited[fmt.Sprintf("%d,%d", x, y)] = true
 
 	winners := [][][]int{}
-	winners = append(winners, move(m, x, y, x+1, y, visited))
-	winners = append(winners, move(m, x, y, x-1, y, visited))
-	winners = append(winners, move(m, x, y, x, y-1, visited))
-	winners = append(winners, move(m, x, y, x, y+1, visited))
+	winners = append(winners, move(g, x, y, x+1, y, visited))
+	winners = append(winners, move(g, x, y, x-1, y, visited))
+	winners = append(winners, move(g, x, y, x, y-1, visited))
+	winners = append(winners, move(g, x, y, x, y+1, visited))
 
 	loop := [][]int{}
 
@@ -167,9 +167,9 @@ func getStart(m [][]string) (int, int) {
 
 func part2(s string) int64 {
 	// var score int64 = 0
-	m := matrix.New(s, "")
+	g := grid.New(s, "")
 
-	x, y := getStart(m)
+	x, y := getStart(g)
 
 	// fmt.Printf("%#v %d %d", m, y, x)
 	visited := map[string]bool{}
@@ -177,10 +177,10 @@ func part2(s string) int64 {
 	// visited[fmt.Sprintf("%d,%d", x, y)] = true
 
 	winners := [][][]int{}
-	winners = append(winners, move(m, x, y, x+1, y, visited))
-	winners = append(winners, move(m, x, y, x-1, y, visited))
-	winners = append(winners, move(m, x, y, x, y-1, visited))
-	winners = append(winners, move(m, x, y, x, y+1, visited))
+	winners = append(winners, move(g, x, y, x+1, y, visited))
+	winners = append(winners, move(g, x, y, x-1, y, visited))
+	winners = append(winners, move(g, x, y, x, y-1, visited))
+	winners = append(winners, move(g, x, y, x, y+1, visited))
 
 	loop := [][]int{}
 
@@ -201,27 +201,27 @@ func part2(s string) int64 {
 		lMap[fmt.Sprintf("%d,%d", l[0], l[1])] = true
 	}
 
-	for x, row := range m {
+	for x, row := range g {
 		for y := range row {
 			if lMap[fmt.Sprintf("%d,%d", x, y)] {
 				continue
 			}
-			m[x][y] = "."
+			g[x][y] = "."
 		}
 	}
 
-	m = ReplaceS(m, lMap)
+	g = ReplaceS(g, lMap)
 
 	// score := 0
 
-	fmt.Printf("%#v\n\n", m)
+	fmt.Printf("%#v\n\n", g)
 
 	contained := map[string]bool{}
-	for x, rows := range m {
+	for x, rows := range g {
 		up := false
 		inLoop := false
 		for y := range rows {
-			c := m[x][y]
+			c := g[x][y]
 			if c == `|` {
 				up = false
 				inLoop = !inLoop
@@ -249,7 +249,7 @@ func part2(s string) int64 {
 
 	fmt.Printf("%#v\n", lMap)
 	fmt.Printf("%#v\n", contained)
-	fmt.Printf("%d %d\n", len(m), len(m[0]))
+	fmt.Printf("%d %d\n", len(g), len(g[0]))
 
 	return int64(len(contained))
 }

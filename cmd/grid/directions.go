@@ -1,4 +1,4 @@
-package matrix
+package grid
 
 var DIR_LEFT = []int{0, -1}
 var DIR_RIGHT = []int{0, 1}

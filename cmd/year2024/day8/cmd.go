@@ -2,7 +2,7 @@ package day8
 
 import (
 	"aoc/cmd/common"
-	"aoc/cmd/matrix"
+	"aoc/cmd/grid"
 	"fmt"
 
 	"github.com/spf13/cobra"
@@ -33,7 +33,7 @@ type antiNode struct {
 }
 
 func part1(s []byte) int {
-	in := matrix.New(s, ``)
+	in := grid.New(s, ``)
 	antennaGroup := getAntennas(in)
 
 	antinodes := map[string][]int{}
@@ -59,8 +59,8 @@ func part1(s []byte) int {
 }
 
 func part2(s []byte) int {
-	m := matrix.New(s, ``)
-	antennaGroup := getAntennas(m)
+	g := grid.New(s, ``)
+	antennaGroup := getAntennas(g)
 
 	antinodes := map[string][]int{}
 
@@ -82,7 +82,7 @@ func part2(s []byte) int {
 				dr := (a[0] - b[0])
 				dc := a[1] - b[1]
 				antinode := []int{a[0] + dr, a[1] + dc}
-				for m.InBound(antinode[0], antinode[1]) {
+				for g.InBound(antinode[0], antinode[1]) {
 					antinodes[fmt.Sprintf("%#v", antinode)] = antinode
 					antinode = []int{antinode[0] + dr, antinode[1] + dc}
 				}
@@ -93,7 +93,7 @@ func part2(s []byte) int {
 	return len(antinodes)
 }
 
-func getAntennas(in matrix.Strings) map[string][][]int {
+func getAntennas(in grid.Strings) map[string][][]int {
 	antennas := map[string][][]int{}
 	for i, r := range in {
 		for j, c := range r {

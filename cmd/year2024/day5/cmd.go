@@ -2,7 +2,7 @@ package day5
 
 import (
 	"aoc/cmd/common"
-	"aoc/cmd/matrix"
+	"aoc/cmd/grid"
 	"bytes"
 	"slices"
 
@@ -28,17 +28,17 @@ func part1(s []byte) int {
 
 	items := bytes.Split(s, []byte("\n\n"))
 
-	rm := matrix.New(items[0], "|").Ints()
+	rg := grid.New(items[0], "|").Ints()
 
-	m := matrix.New(items[1], ",").Ints()
+	g := grid.New(items[1], ",").Ints()
 
 	rules := map[int][]int{}
 
-	for _, r := range rm {
+	for _, r := range rg {
 		rules[r[0]] = append(rules[r[0]], r[1])
 	}
 
-	for _, r := range m {
+	for _, r := range g {
 		if isValid(r, common.Index(r), rules) {
 			mid := (len(r) - 1) / 2
 			score += r[mid]
@@ -67,16 +67,16 @@ func part2(s []byte) int {
 
 	items := bytes.Split(s, []byte("\n\n"))
 
-	rm := matrix.New(items[0], "|").Ints()
-	m := matrix.New(items[1], ",").Ints()
+	rg := grid.New(items[0], "|").Ints()
+	g := grid.New(items[1], ",").Ints()
 
 	rules := map[int][]int{}
 
-	for _, r := range rm {
+	for _, r := range rg {
 		rules[r[0]] = append(rules[r[0]], r[1])
 	}
 
-	for _, r := range m {
+	for _, r := range g {
 		if !isValid(r, common.Index(r), rules) {
 			r = reorder(r, rules)
 			mid := (len(r) - 1) / 2

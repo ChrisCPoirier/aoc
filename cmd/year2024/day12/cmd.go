@@ -3,7 +3,7 @@ package day12
 import (
 	"aoc/cmd/common"
 	"aoc/cmd/display"
-	"aoc/cmd/matrix"
+	"aoc/cmd/grid"
 	"fmt"
 	"image/color"
 	"sync"
@@ -27,12 +27,12 @@ func execute(parent, command string) {
 }
 
 func part1(s []byte) int {
-	m := matrix.New(s, ``)
+	g := grid.New(s, ``)
 
 	score := 0
-	for _, group := range groups(m) {
+	for _, group := range groups(g) {
 		area := len(group)
-		perm := perimeter(m, group)
+		perm := perimeter(g, group)
 		score += area * perm
 	}
 
@@ -40,19 +40,19 @@ func part1(s []byte) int {
 }
 
 func part2(s []byte) int {
-	m := matrix.New(s, ``)
+	g := grid.New(s, ``)
 
 	score := 0
-	for _, group := range groups(m) {
+	for _, group := range groups(g) {
 		area := len(group)
-		sides := sides(m, group)
+		sides := sides(g, group)
 		score += area * sides
 	}
 
 	return score
 }
 
-func groups(m matrix.Strings) [][][]int {
+func groups(m grid.Strings) [][][]int {
 	v := map[string]bool{}
 
 	groups := [][][]int{}
@@ -66,7 +66,7 @@ func groups(m matrix.Strings) [][][]int {
 			v[key(r, c)] = true
 			group := [][]int{{r, c}}
 
-			for _, dir := range matrix.DIR_CROSS {
+			for _, dir := range grid.DIR_CROSS {
 				group = append(group, step(m, r, c, dir, v)...)
 			}
 			groups = append(groups, group)
@@ -76,7 +76,7 @@ func groups(m matrix.Strings) [][][]int {
 	return groups
 }
 
-func step(m matrix.Strings, r, c int, dir []int, v map[string]bool) [][]int {
+func step(m grid.Strings, r, c int, dir []int, v map[string]bool) [][]int {
 	nr := r + dir[0]
 	nc := c + dir[1]
 
@@ -96,16 +96,16 @@ func step(m matrix.Strings, r, c int, dir []int, v map[string]bool) [][]int {
 
 	steps := [][]int{{nr, nc}}
 
-	for _, dir := range matrix.DIR_CROSS {
+	for _, dir := range grid.DIR_CROSS {
 		steps = append(steps, step(m, nr, nc, dir, v)...)
 	}
 	return steps
 }
 
-func perimeter(m matrix.Strings, g [][]int) int {
+func perimeter(m grid.Strings, g [][]int) int {
 	perm := 0
 	for _, p := range g {
-		for _, dir := range matrix.DIR_CROSS {
+		for _, dir := range grid.DIR_CROSS {
 			r := p[0] + dir[0]
 			c := p[1] + dir[1]
 			if !m.InBound(r, c) || m[p[0]][p[1]] != m[r][c] {
@@ -117,13 +117,13 @@ func perimeter(m matrix.Strings, g [][]int) int {
 	return perm
 }
 
-func sides(m matrix.Strings, g [][]int) int {
+func sides(m grid.Strings, g [][]int) int {
 	sides := 0
 	v := map[string]bool{}
 	for _, p := range g {
 		r, c := p[0], p[1]
 		v[key(r, c)] = true
-		for _, dir := range [][]int{matrix.DIR_UP, matrix.DIR_DOWN} {
+		for _, dir := range [][]int{grid.DIR_UP, grid.DIR_DOWN} {
 			if _, ok := v[sKey(r, c, dir)]; ok {
 				continue
 			}
@@ -133,13 +133,13 @@ func sides(m matrix.Strings, g [][]int) int {
 			if !m.InBound(cr, cc) || m[r][c] != m[cr][cc] {
 				sides++
 				v[sKey(r, c, dir)] = true
-				followEdge(m, v, r, c, matrix.DIR_LEFT, dir)
-				followEdge(m, v, r, c, matrix.DIR_RIGHT, dir)
+				followEdge(m, v, r, c, grid.DIR_LEFT, dir)
+				followEdge(m, v, r, c, grid.DIR_RIGHT, dir)
 				continue
 			}
 		}
 
-		for _, dir := range [][]int{matrix.DIR_LEFT, matrix.DIR_RIGHT} {
+		for _, dir := range [][]int{grid.DIR_LEFT, grid.DIR_RIGHT} {
 			if _, ok := v[sKey(r, c, dir)]; ok {
 				continue
 			}
@@ -149,8 +149,8 @@ func sides(m matrix.Strings, g [][]int) int {
 			if !m.InBound(cr, cc) || m[r][c] != m[cr][cc] {
 				sides++
 				v[sKey(r, c, dir)] = true
-				followEdge(m, v, r, c, matrix.DIR_UP, dir)
-				followEdge(m, v, r, c, matrix.DIR_DOWN, dir)
+				followEdge(m, v, r, c, grid.DIR_UP, dir)
+				followEdge(m, v, r, c, grid.DIR_DOWN, dir)
 				continue
 			}
 		}
@@ -159,7 +159,7 @@ func sides(m matrix.Strings, g [][]int) int {
 	return sides
 }
 
-func followEdge(m matrix.Strings, v map[string]bool, r, c int, dir []int, check []int) {
+func followEdge(m grid.Strings, v map[string]bool, r, c int, dir []int, check []int) {
 	nr := r + dir[0]
 	nc := c + dir[1]
 	cr := nr + check[0]
@@ -185,7 +185,7 @@ func sKey(r, c int, check []int) string {
 
 // shorten function name for code read
 func key(r, c int) string {
-	return matrix.Key(r, c)
+	return grid.Key(r, c)
 }
 
 var colors = map[string]color.RGBA{
@@ -218,19 +218,19 @@ var colors = map[string]color.RGBA{
 }
 
 func vizPart1(s []byte) int {
-	m := matrix.New(s, ``)
+	g := grid.New(s, ``)
 
-	d := display.New(m)
+	d := display.New(g)
 	score := 0
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	go func() {
 		// time.Sleep(time.Second * 5)
-		for _, group := range groups(m) {
+		for _, group := range groups(g) {
 			fr, fc := group[0][0], group[0][1]
-			d.ColorCells(group, colors[m[fr][fc]])
+			d.ColorCells(group, colors[g[fr][fc]])
 			area := len(group)
-			perm := perimeter(m, group)
+			perm := perimeter(g, group)
 			score += area * perm
 		}
 		wg.Done()

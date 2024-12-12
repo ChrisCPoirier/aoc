@@ -2,7 +2,7 @@ package day7
 
 import (
 	"aoc/cmd/common"
-	"aoc/cmd/matrix"
+	"aoc/cmd/grid"
 	"fmt"
 	"strconv"
 	"strings"
@@ -26,9 +26,9 @@ func execute(parent, command string) {
 
 func part1(s []byte) int64 {
 	var score int64 = 0
-	m := matrix.New(s, ": ")
+	g := grid.New(s, ": ")
 
-	for _, r := range m {
+	for _, r := range g {
 		t, _ := strconv.Atoi(r[0])
 		total := int64(t)
 		numbers := common.AsInts(strings.Split(r[1], ` `))
@@ -80,9 +80,9 @@ func getScore(total int64, sum int64, numbers []int, i int, operators ...string)
 
 func part2(s []byte) int64 {
 	var score int64 = 0
-	m := matrix.New(s, ": ")
+	g := grid.New(s, ": ")
 
-	for _, r := range m {
+	for _, r := range g {
 		t, _ := strconv.Atoi(r[0])
 		total := int64(t)
 		numbers := common.AsInts(strings.Split(r[1], ` `))

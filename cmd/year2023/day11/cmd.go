@@ -1,7 +1,7 @@
 package day11
 
 import (
-	"aoc/cmd/matrix"
+	"aoc/cmd/grid"
 	"fmt"
 	"os"
 
@@ -33,11 +33,11 @@ func execute(parent, command string) {
 
 func part1(s string, scale int) int64 {
 	// var score int64 = 0
-	m := matrix.New(s, "")
+	g := grid.New(s, "")
 
 	galaxies := [][]int{}
 
-	for x, row := range m {
+	for x, row := range g {
 		for y, v := range row {
 			if v == `#` {
 				galaxies = append(galaxies, []int{x, y})
@@ -47,7 +47,7 @@ func part1(s string, scale int) int64 {
 
 	expandedSpace := map[string]bool{}
 
-	for x, row := range m {
+	for x, row := range g {
 		expanded := true
 		for _, v := range row {
 			if v == `#` {
@@ -60,10 +60,10 @@ func part1(s string, scale int) int64 {
 		}
 	}
 
-	for y := range m[0] {
+	for y := range g[0] {
 		expanded := true
-		for x := range m {
-			if m[x][y] == `#` {
+		for x := range g {
+			if g[x][y] == `#` {
 				expanded = false
 				break
 			}
