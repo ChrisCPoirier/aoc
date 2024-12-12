@@ -21,8 +21,9 @@ example: `go run main.go 2024 day1`
 - [x] [day 9](https://studio.youtube.com/video/0FFQMkYZQxY/edit)
 - [x] [day 10](https://www.youtube.com/live/gp8LH3bWp_s?t=848s)
 - [x] [day 11](https://youtube.com/live/-EWPxDpUSDM)
+- [x] [day 12](https://youtube.com/live/ZkbuyA409Lw)
 
 ### Input/test files
 all test inputs are the same for each AOC day. You can pull those from the website and place them in the respective input files.
 
-All actaul input is different for each user and the creators of AOC have asked that we not share that data. You can use your own input by creating the respective 1.txt,2.txt and test.txt,test2.txt
+All actual input is different for each user and the creators of AOC have asked that we not share that data. You can use your own input by creating the respective 1.txt,2.txt and test.txt,test2.txt
