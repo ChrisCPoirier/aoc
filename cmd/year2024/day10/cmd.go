@@ -22,11 +22,6 @@ func execute(parent, command string) {
 	common.Run(parent, command, 2, part2)
 }
 
-type block struct {
-	id   int
-	size int
-}
-
 func part1(s []byte) int {
 	m := matrix.New(s, ``).Ints()
 	score := 0
