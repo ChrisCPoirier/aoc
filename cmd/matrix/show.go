@@ -26,7 +26,6 @@ func (s Strings) Fyne(window fyne.Window) *fyne.Container {
 }
 
 func NewSquare(s string, c color.RGBA) fyne.CanvasObject {
-	// color.RGBA{234, 239, 44, 100} // yellow
 	sqr := canvas.NewRectangle(c)
 	sqr.Resize(
 		fyne.Size{
@@ -34,6 +33,8 @@ func NewSquare(s string, c color.RGBA) fyne.CanvasObject {
 			Height: 1,
 		},
 	)
+	sqr.StrokeColor = c
+	sqr.StrokeWidth = 0
 	text := canvas.NewText(s, color.White)
 	text.Resize(
 		fyne.Size{
