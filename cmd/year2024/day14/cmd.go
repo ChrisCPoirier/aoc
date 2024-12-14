@@ -65,6 +65,13 @@ func key(x, y int) string {
 	return fmt.Sprintf("%d:%d", x, y)
 }
 
+func setInBounds(i, b int) int {
+	if i < 0 {
+		return i + b
+	}
+	return i
+}
+
 func score(robots []robot, bx, by int) int {
 	q1, q2, q3, q4 := 0, 0, 0, 0
 
@@ -74,13 +81,8 @@ func score(robots []robot, bx, by int) int {
 		ny := (r.vy*100 + r.py) % by
 
 		// if we are negative we need to roll back to the previous box
-		if nx < 0 {
-			nx += bx
-		}
-
-		if ny < 0 {
-			ny += by
-		}
+		nx = setInBounds(nx, bx)
+		ny = setInBounds(ny, by)
 
 		switch {
 		case nx == bx/2 || ny == by/2:
@@ -99,33 +101,33 @@ func score(robots []robot, bx, by int) int {
 	return q1 * q2 * q3 * q4
 }
 
-func score2(robots []robot, bx, by int) int {
+func score2(rb []robot, bx, by int) int {
 	score := 0
 
 	g := grid.Strings{}
 	for i := range 100000 {
 		g = grid.Strings{}.Fill(bx, by, `.`)
-		for i, r := range robots {
-			robots[i].px += r.vx
-			robots[i].py += r.vy
+		for i, r := range rb {
+			rb[i].px += r.vx
+			rb[i].py += r.vy
 
-			if robots[i].px < 0 {
-				robots[i].px += bx
+			if rb[i].px < 0 {
+				rb[i].px += bx
 			}
 
-			if robots[i].py < 0 {
-				robots[i].py += by
+			if rb[i].py < 0 {
+				rb[i].py += by
 			}
 
-			if robots[i].px >= bx {
-				robots[i].px -= bx
+			if rb[i].px >= bx {
+				rb[i].px -= bx
 			}
 
-			if robots[i].py >= by {
-				robots[i].py -= by
+			if rb[i].py >= by {
+				rb[i].py -= by
 			}
 
-			g[robots[i].px][robots[i].py] = `#`
+			g[rb[i].px][rb[i].py] = `#`
 		}
 
 		if maybeTree(g) {
