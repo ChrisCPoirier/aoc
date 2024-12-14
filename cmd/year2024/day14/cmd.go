@@ -22,10 +22,8 @@ var Cmd = &cobra.Command{
 }
 
 func execute(parent, command string) {
-	bx = 101
-	by = 103
-	common.Run(parent, command, 1, part1, "part 1")
-	common.Run(parent, command, 1, part2, "part 2")
+	common.Run(parent, command, 1, func(b []byte) int { return part1(b, 101, 103) }, "part 1")
+	common.Run(parent, command, 1, func(b []byte) int { return part2(b, 101, 103) }, "part 2")
 }
 
 var reLine = regexp.MustCompile(`p=(-?\d+),(-?\d+) v=(-?\d+),(-?\d+)`)
@@ -35,15 +33,13 @@ type robot struct {
 	vx, vy int
 }
 
-var bx, by = 11, 7
-
-func part1(s []byte) int {
+func part1(s []byte, bx, by int) int {
 	logrus.Infof("bx:%d by:%d", bx, by)
 	robots := parseRobots(s)
 	return score(robots, bx, by)
 }
 
-func part2(s []byte) int {
+func part2(s []byte, bx, by int) int {
 	logrus.Infof("bx:%d by:%d", bx, by)
 	robots := parseRobots(s)
 
@@ -86,26 +82,18 @@ func score(robots []robot, bx, by int) int {
 			ny += by
 		}
 
-		//skip middle
-		if nx == bx/2 || ny == by/2 {
+		switch {
+		case nx == bx/2 || ny == by/2:
 			continue
-		}
-
-		if nx < bx/2 && ny < by/2 {
+		case nx < bx/2 && ny < by/2:
 			q1++
-			continue
-		}
-
-		if nx < bx/2 && ny > by/2 {
+		case nx < bx/2 && ny > by/2:
 			q2++
-			continue
-		}
-
-		if ny < by/2 {
+		case ny < by/2:
 			q3++
-			continue
+		default:
+			q4++
 		}
-		q4++
 	}
 
 	return q1 * q2 * q3 * q4

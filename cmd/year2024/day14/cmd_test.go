@@ -20,13 +20,13 @@ func TestParts(t *testing.T) {
 		{
 			expected: 12,
 			input:    b,
-			fn:       part1,
+			fn:       func(b []byte) int { return part1(b, 11, 7) },
 		},
 		{
 			// Tree does not exist in test input
 			expected: 0,
 			input:    b,
-			fn:       part2,
+			fn:       func(b []byte) int { return part2(b, 11, 7) },
 		},
 	}
 
