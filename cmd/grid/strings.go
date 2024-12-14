@@ -36,10 +36,18 @@ type Strings [][]string
 func (g Strings) Pretty() string {
 	out := ``
 	for _, item := range g {
-		out += fmt.Sprintf("%s\n", strings.Join(item, " "))
+		out += fmt.Sprintf("%s\n", strings.Join(item, ""))
 	}
 	return out
 
+}
+
+func (g Strings) Fill(rl, cl int, s string) Strings {
+	g = Strings{}
+	for range rl {
+		g = append(g, strings.Split(strings.Repeat(`.`, cl), ``))
+	}
+	return g
 }
 
 func Key(r, c int) string {

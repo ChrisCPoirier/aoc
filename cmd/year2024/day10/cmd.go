@@ -93,3 +93,14 @@ func step(pos, dir []int, m grid.Ints) [][]int {
 	return ends
 
 }
+
+func visualize(s []byte) int {
+	g := grid.New(s, ``).Ints()
+	score := 0
+	for _, ends := range trailEnds(trailHeads(g), g) {
+		ends = common.Uniq(ends)
+		score += len(ends)
+	}
+
+	return score
+}
