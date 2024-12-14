@@ -73,15 +73,11 @@ func score(robots []robot, bx, by int) int {
 	q1, q2, q3, q4 := 0, 0, 0, 0
 
 	for _, r := range robots {
-		nx := r.vx * 100
-		ny := r.vy * 100
+		//velocity * 100 iterations + starting position Remainder of bounding x/y for final box position
+		nx := (r.vx*100 + r.px) % bx
+		ny := (r.vy*100 + r.py) % by
 
-		nx += r.px
-		ny += r.py
-
-		nx = nx % bx
-		ny = ny % by
-
+		// if we are negative we need to roll back to the previous box
 		if nx < 0 {
 			nx += bx
 		}
@@ -157,7 +153,7 @@ func score2(robots []robot, bx, by int) int {
 	return score
 }
 
-var partTree = `#########`
+var partTree = `########`
 
 func maybeTree(g grid.Strings) bool {
 	for _, r := range g {
