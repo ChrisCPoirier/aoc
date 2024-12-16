@@ -2,6 +2,7 @@ package day14
 
 import (
 	"aoc/cmd/common"
+	"aoc/cmd/display"
 	"aoc/cmd/grid"
 	"fmt"
 	"regexp"
@@ -42,7 +43,6 @@ func part1(s []byte, bx, by int) int {
 func part2(s []byte, bx, by int) int {
 	logrus.Infof("bx:%d by:%d", bx, by)
 	robots := parseRobots(s)
-
 	return score2(robots, bx, by)
 }
 
@@ -104,7 +104,8 @@ func score(robots []robot, bx, by int) int {
 func score2(rb []robot, bx, by int) int {
 	score := 0
 
-	g := grid.Strings{}
+	g := grid.Strings{}.Fill(bx, by, `.`)
+	display.New(g)
 	for i := range 100000 {
 		g = grid.Strings{}.Fill(bx, by, `.`)
 		for i, r := range rb {
@@ -128,6 +129,10 @@ func score2(rb []robot, bx, by int) int {
 			}
 
 			g[rb[i].px][rb[i].py] = `#`
+		}
+
+		if i%10 == 0 || maybeTree(g) {
+
 		}
 
 		if maybeTree(g) {
