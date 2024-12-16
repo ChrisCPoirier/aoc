@@ -88,18 +88,18 @@ func Index[T comparable](in []T) map[T]int {
 }
 
 func Uniq[T comparable](in [][]T) [][]T {
-	k := map[string][]T{}
-	for _, items := range in {
-		k[fmt.Sprintf("%#v", items)] = items
+	out := [][]T{}
+	u := map[string][]T{}
+
+	for _, r := range in {
+		if _, ok := u[fmt.Sprintf("%#v", r)]; ok {
+			continue
+		}
+		u[fmt.Sprintf("%#v", r)] = r
+		out = append(out, r)
 	}
 
-	u := [][]T{}
-
-	for _, v := range k {
-		u = append(u, v)
-	}
-
-	return u
+	return out
 }
 
 func Run[T comparable](year, day string, part int, fn func([]byte) T, message ...string) {
