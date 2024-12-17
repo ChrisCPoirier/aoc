@@ -29,6 +29,7 @@ example: `go run main.go 2024 day1`
 - [x] [day 14](https://youtube.com/live/mEhYUjdOEVw)
 - [x] [day 15](null)
 - [x] [day 16](https://youtube.com/live/1euxLrqy2yc)
+- [x] [day 17](https://youtube.com/live/4J7508AAMfs)
 
 ### Input/test files
 all test inputs are the same for each AOC day. You can pull those from the website and place them in the respective input files.
