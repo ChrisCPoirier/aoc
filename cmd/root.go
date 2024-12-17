@@ -24,7 +24,6 @@ func init() {
 	rootCmd.AddCommand(year2022.Cmd)
 	rootCmd.AddCommand(year2023.Cmd)
 	rootCmd.AddCommand(year2024.Cmd)
-
 }
 
 func Execute() {
