@@ -23,7 +23,7 @@ var Cmd = &cobra.Command{
 }
 
 func execute(parent, command string) {
-	// common.Run(parent, command, 1, part1, "part 1")
+	common.Run(parent, command, 1, part1, "part 1")
 	common.Run(parent, command, 1, part2, "part 2")
 }
 func key(r, c int) string {
@@ -36,6 +36,7 @@ var reRegister = regexp.MustCompile(`Register (\w): (\d+)`)
 var reProgram = regexp.MustCompile(`Program: (.*)$`)
 
 func part1(s []byte) int {
+	logrus.SetLevel(logrus.DebugLevel)
 	for _, match := range reRegister.FindAllStringSubmatch(string(s), len(s)) {
 		v, _ := strconv.Atoi(match[2])
 		mem[match[1]] = v
@@ -47,6 +48,7 @@ func part1(s []byte) int {
 }
 
 func part2(s []byte) int {
+	logrus.SetLevel(logrus.InfoLevel)
 	for _, match := range reRegister.FindAllStringSubmatch(string(s), len(s)) {
 		v, _ := strconv.Atoi(match[2])
 		mem[match[1]] = v
@@ -55,6 +57,8 @@ func part2(s []byte) int {
 
 	q := []int{}
 	new_q := []int{0}
+
+	logrus.Infof("PROGRAM: %s", program)
 
 	for i := len(program) - 1; i >= 0; i-- {
 		q = slices.Clone(new_q)
@@ -68,6 +72,7 @@ func part2(s []byte) int {
 				out := run(s)
 
 				if string(out[0]) == program[i] {
+					logrus.Infof("MEM_A_%d: %b (%d)", i, n+j, n+j)
 					new_q = append(new_q, n+j)
 				}
 
@@ -89,6 +94,8 @@ func run(s []byte) string {
 
 	out := []string{}
 
+	logrus.Debugf("MEM_A_0: %b (%d)", mem[`A`], mem[`A`])
+
 	for i := 0; i < len(program); i++ {
 		// for i, v := range program {
 		v := program[i]
@@ -109,6 +116,7 @@ func run(s []byte) string {
 		o := fn(v)
 		if o != `` {
 			out = append(out, o)
+			logrus.Debugf("MEM_A_%d: %b (%d)", len(out), mem[`A`], mem[`A`])
 		}
 	}
 
