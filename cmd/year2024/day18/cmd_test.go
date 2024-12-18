@@ -18,7 +18,7 @@ func TestParts(t *testing.T) {
 		fn       func([]byte) int
 	}{
 		{
-			expected: 2,
+			expected: 22,
 			input:    b,
 			fn:       part1,
 		},
@@ -27,6 +27,29 @@ func TestParts(t *testing.T) {
 		// 	input:    b,
 		// 	fn:       part2,
 		// },
+	}
+
+	for _, test := range tests {
+		assert.Equal(t, test.expected, test.fn(test.input))
+	}
+}
+
+func TestPart2(t *testing.T) {
+
+	b, err := os.ReadFile(`test.txt`)
+	assert.NoError(t, err)
+
+	tests := []struct {
+		expected string
+		input    []byte
+		fn       func([]byte) string
+	}{
+
+		{
+			expected: `6,1`,
+			input:    b,
+			fn:       part2,
+		},
 	}
 
 	for _, test := range tests {
