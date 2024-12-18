@@ -3,7 +3,6 @@ package day18
 import (
 	"aoc/cmd/common"
 	"aoc/cmd/grid"
-	"container/heap"
 	"fmt"
 	"slices"
 	"strconv"
@@ -45,6 +44,12 @@ func parse(s []byte) ([][]int, int, int) {
 
 	return corrupt, size, length
 
+}
+
+type mem struct {
+	r    int
+	c    int
+	path [][]int
 }
 
 func part1(s []byte) int {
@@ -117,28 +122,26 @@ func exist(path [][]int, r, c int) bool {
 }
 
 func getPath(g grid.Strings, size int) mem {
-	pq := &PriorityQueue{}
-	heap.Init(pq)
 
-	heap.Push(pq, &mem{
+	queue := []mem{{
 		r:    0,
 		c:    0,
-		cost: 0,
 		path: [][]int{{0, 0}},
-	})
+	}}
+	var p mem
 
-	visited := map[string]mem{}
-	for pq.Len() > 0 {
-		p := heap.Pop(pq).(*mem)
+	visited := map[string]bool{}
+	for len(queue) > 0 {
+		p, queue = queue[0], queue[1:]
 
 		if _, ok := visited[grid.Key(p.r, p.c)]; ok {
 			continue
 		}
 
-		visited[grid.Key(p.r, p.c)] = *p
+		visited[grid.Key(p.r, p.c)] = true
 
 		if p.r == size && p.c == size {
-			return *p
+			return p
 		}
 
 		for _, dir := range grid.DIR_CROSS {
@@ -152,54 +155,12 @@ func getPath(g grid.Strings, size int) mem {
 				continue
 			}
 
-			heap.Push(pq, &mem{
+			queue = append(queue, mem{
 				r:    nr,
 				c:    nc,
-				cost: p.cost + 1,
 				path: append(slices.Clone(p.path), []int{nr, nc}),
 			})
 		}
 	}
 	return mem{}
-}
-
-type mem struct {
-	r     int
-	c     int
-	rd    int
-	cd    int
-	cost  int
-	index int
-	path  [][]int
-}
-
-type PriorityQueue []*mem
-
-func (pq PriorityQueue) Len() int { return len(pq) }
-
-func (pq PriorityQueue) Less(i, j int) bool {
-	return pq[i].cost < pq[j].cost
-}
-
-func (pq PriorityQueue) Swap(i, j int) {
-	pq[i], pq[j] = pq[j], pq[i]
-	pq[i].index = i
-	pq[j].index = j
-}
-
-func (pq *PriorityQueue) Push(x any) {
-	n := len(*pq)
-	path := x.(*mem)
-	path.index = n
-	*pq = append(*pq, path)
-}
-
-func (pq *PriorityQueue) Pop() any {
-	old := *pq
-	n := len(old)
-	path := old[n-1]
-	old[n-1] = nil
-	path.index = -1
-	*pq = old[0 : n-1]
-	return path
 }
