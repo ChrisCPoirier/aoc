@@ -35,7 +35,7 @@ var reRegister = regexp.MustCompile(`Register (\w): (\d+)`)
 
 var reProgram = regexp.MustCompile(`Program: (.*)$`)
 
-func part1(s []byte) int {
+func part1(s []byte) string {
 	logrus.SetLevel(logrus.DebugLevel)
 	for _, match := range reRegister.FindAllStringSubmatch(string(s), len(s)) {
 		v, _ := strconv.Atoi(match[2])
@@ -43,8 +43,7 @@ func part1(s []byte) int {
 	}
 
 	out := run(s)
-	f, _ := strconv.Atoi(out)
-	return f
+	return strings.Join(strings.Split(out, ``), `,`)
 }
 
 func part2(s []byte) int {
@@ -78,7 +77,7 @@ func part2(s []byte) int {
 
 				if out == strings.Join(program, ``) {
 					logrus.Infof("match %d", n+j)
-					return 0
+					return n + j
 				}
 			}
 		}
