@@ -42,6 +42,57 @@ func (g Strings) Pretty() string {
 
 }
 
+type step struct {
+	R    int
+	C    int
+	Path [][]int
+}
+
+// sr (start r), sc (start c), er (end r), ec (end c)
+// walk the grid starting at sr,sc and find the path to er,ec
+func (s Strings) BFS(sr, sc, er, ec int) step {
+	queue := []step{{
+		R:    sr,
+		C:    sc,
+		Path: [][]int{{0, 0}},
+	}}
+	var p step
+
+	visited := map[string]bool{}
+	for len(queue) > 0 {
+		p, queue = queue[0], queue[1:]
+
+		if _, ok := visited[Key(p.R, p.C)]; ok {
+			continue
+		}
+
+		visited[Key(p.R, p.C)] = true
+
+		if p.R == er && p.C == ec {
+			return p
+		}
+
+		for _, dir := range DIR_CROSS {
+			nr := p.R + dir[0]
+			nc := p.C + dir[1]
+			if !s.InBound(nr, nc) {
+				continue
+			}
+
+			if s[nr][nc] == `#` {
+				continue
+			}
+
+			queue = append(queue, step{
+				R:    nr,
+				C:    nc,
+				Path: append(slices.Clone(p.Path), []int{nr, nc}),
+			})
+		}
+	}
+	return step{}
+}
+
 func (g Strings) Fill(rl, cl int, s string) Strings {
 	g = Strings{}
 	for range rl {
