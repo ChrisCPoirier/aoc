@@ -37,8 +37,8 @@ func part1(s []byte) int {
 
 	for _, pattern := range patterns {
 
-		cache := map[string]int{}
-		if find(pattern, m, cache) > 0 {
+		cache := map[int]int{}
+		if find2(pattern, 0, m, cache) > 0 {
 			score++
 		}
 	}
@@ -60,8 +60,8 @@ func part2(s []byte) int {
 	score := 0
 
 	for _, pattern := range patterns {
-		cache := map[string]int{}
-		score += find(pattern, m, cache)
+		cache := map[int]int{}
+		score += find2(pattern, 0, m, cache)
 	}
 
 	return score
@@ -81,12 +81,41 @@ func find(s string, t map[string]bool, c map[string]int) int {
 	score := 0
 	for k := range t {
 		n := strings.TrimPrefix(s, k)
-
-		if sub := find(n, t, c); sub > 0 {
-			score += sub
-		}
+		score += find(n, t, c)
 	}
 	c[s] = score
+
+	return score
+}
+
+func find2(s string, start int, t map[string]bool, c map[int]int) int {
+	if start >= len(s) {
+		return 1
+	}
+
+	if _, ok := c[start]; ok {
+		return c[start]
+	}
+
+	c[start] = 0
+
+	score := 0
+
+	for k := range t {
+		end := start + len(k)
+
+		if end > len(s) {
+			continue
+		}
+
+		if !(s[start:end] == k) {
+			continue
+		}
+
+		score += find2(s, end, t, c)
+	}
+
+	c[start] = score
 
 	return score
 }
