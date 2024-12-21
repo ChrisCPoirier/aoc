@@ -54,26 +54,28 @@ func (s Strings) BFS(sr, sc, er, ec, maxDepth int) step {
 	queue := []step{{
 		R:    sr,
 		C:    sc,
-		Path: [][]int{{0, 0}},
+		Path: [][]int{{sr, sc}},
 	}}
 	var p step
 
-	visited := map[string]bool{}
+	optimal := step{}
+
+	visited := map[string]int{}
 	for len(queue) > 0 {
 		p, queue = queue[0], queue[1:]
 
-		if maxDepth > 0 && len(p.Path) > maxDepth {
-			continue
+		if v, ok := visited[Key(p.R, p.C)]; ok {
+			if v < len(p.Path) {
+				continue
+			}
 		}
 
-		if _, ok := visited[Key(p.R, p.C)]; ok {
-			continue
-		}
-
-		visited[Key(p.R, p.C)] = true
+		visited[Key(p.R, p.C)] = len(p.Path)
 
 		if p.R == er && p.C == ec {
-			return p
+			if len(optimal.Path) == 0 || len(p.Path) < len(optimal.Path) {
+				optimal = p
+			}
 		}
 
 		for _, dir := range DIR_CROSS {
@@ -94,7 +96,7 @@ func (s Strings) BFS(sr, sc, er, ec, maxDepth int) step {
 			})
 		}
 	}
-	return step{}
+	return optimal
 }
 
 func (g Strings) Fill(rl, cl int, s string) Strings {
