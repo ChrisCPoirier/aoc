@@ -13,6 +13,7 @@ import (
 	"aoc/cmd/year2024/day18"
 	"aoc/cmd/year2024/day19"
 	"aoc/cmd/year2024/day2"
+	"aoc/cmd/year2024/day20"
 	"aoc/cmd/year2024/day3"
 	"aoc/cmd/year2024/day4"
 	"aoc/cmd/year2024/day5"
@@ -52,6 +53,7 @@ func init() {
 	Cmd.AddCommand(day17.Cmd)
 	Cmd.AddCommand(day18.Cmd)
 	Cmd.AddCommand(day19.Cmd)
+	Cmd.AddCommand(day20.Cmd)
 }
 
 func Execute() {

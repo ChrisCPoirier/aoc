@@ -50,7 +50,7 @@ type step struct {
 
 // sr (start r), sc (start c), er (end r), ec (end c)
 // walk the grid starting at sr,sc and find the path to er,ec
-func (s Strings) BFS(sr, sc, er, ec int) step {
+func (s Strings) BFS(sr, sc, er, ec, maxDepth int) step {
 	queue := []step{{
 		R:    sr,
 		C:    sc,
@@ -61,6 +61,10 @@ func (s Strings) BFS(sr, sc, er, ec int) step {
 	visited := map[string]bool{}
 	for len(queue) > 0 {
 		p, queue = queue[0], queue[1:]
+
+		if maxDepth > 0 && len(p.Path) > maxDepth {
+			continue
+		}
 
 		if _, ok := visited[Key(p.R, p.C)]; ok {
 			continue

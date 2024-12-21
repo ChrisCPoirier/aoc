@@ -68,7 +68,7 @@ func part1(s []byte) int {
 		}
 	}
 
-	step := g.BFS(0, 0, size, size)
+	step := g.BFS(0, 0, size, size, 0)
 
 	return len(step.Path) - 1
 }
@@ -90,7 +90,7 @@ func part2(s []byte) string {
 		}
 	}
 
-	step := g.BFS(0, 0, size, size)
+	step := g.BFS(0, 0, size, size, 0)
 	for _, v := range corrupted[length:] {
 
 		r := v[0]
@@ -98,7 +98,7 @@ func part2(s []byte) string {
 		g[r][c] = `#`
 
 		if exist(step.Path, r, c) {
-			step = g.BFS(0, 0, size, size)
+			step = g.BFS(0, 0, size, size, 0)
 		}
 
 		if len(step.Path) == 0 {
