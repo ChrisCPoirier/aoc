@@ -18,18 +18,42 @@ func TestParts(t *testing.T) {
 		fn       func([]byte) int
 	}{
 		{
-			expected: 6,
+			expected: 44,
 			input:    b,
-			fn:       part1,
+			fn:       func(s []byte) int { return part1(s, 2, 0) },
 		},
-		{
-			expected: 16,
-			input:    b,
-			fn:       part2,
-		},
+		// {
+		// 	expected: 16,
+		// 	input:    b,
+		// 	fn:       part2,
+		// },
 	}
 
 	for _, test := range tests {
 		assert.Equal(t, test.expected, test.fn(test.input))
+	}
+}
+
+func TestSort(t *testing.T) {
+
+	tests := []struct {
+		name     string
+		expected [][]int
+		input    [][]int
+	}{
+		{
+			name:     `already in order, should not change`,
+			input:    [][]int{{13, 3}, {13, 5}},
+			expected: [][]int{{13, 3}, {13, 5}},
+		},
+		{
+			name:     `out of order, should change`,
+			input:    [][]int{{13, 5}, {13, 3}},
+			expected: [][]int{{13, 3}, {13, 5}},
+		},
+	}
+
+	for _, test := range tests {
+		assert.Equal(t, test.expected, sort(test.input), test.name)
 	}
 }
