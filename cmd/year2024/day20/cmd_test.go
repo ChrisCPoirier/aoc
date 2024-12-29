@@ -20,13 +20,13 @@ func TestParts(t *testing.T) {
 		{
 			expected: 44,
 			input:    b,
-			fn:       func(s []byte) int { return part1(s, 2, 0) },
+			fn:       func(s []byte) int { return part1(s, 2, 2) },
 		},
-		// {
-		// 	expected: 16,
-		// 	input:    b,
-		// 	fn:       part2,
-		// },
+		{
+			expected: 285,
+			input:    b,
+			fn:       func(s []byte) int { return part2(s, 20, 50) },
+		},
 	}
 
 	for _, test := range tests {

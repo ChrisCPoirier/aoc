@@ -4,6 +4,7 @@ import (
 	"aoc/cmd/common"
 	"aoc/cmd/grid"
 	"fmt"
+	"math"
 	"slices"
 
 	"github.com/sirupsen/logrus"
@@ -21,7 +22,7 @@ var Cmd = &cobra.Command{
 
 func execute(parent, command string) {
 	common.Run(parent, command, 1, func(s []byte) int { return part1(s, 2, 100) }, "part 1")
-	// common.Run(parent, command, 1, part2, "part 2")
+	common.Run(parent, command, 1, func(s []byte) int { return part1(s, 20, 100) }, "part 2")
 }
 
 func part1(s []byte, cheatLength, minimum int) int {
@@ -50,64 +51,52 @@ func part1(s []byte, cheatLength, minimum int) int {
 		r := step[0]
 		c := step[1]
 		track[grid.Key(r, c)] = i
-		queue = append(queue, cheat{R: r, C: c, Path: [][]int{{r, c}}, depth: 1})
+		queue = append(queue, cheat{R: r, C: c, Path: [][]int{{r, c}}, depth: 1, visited: map[string]bool{}})
 	}
 
 	// scores
-	logrus.Infof("%#v", queue)
+	// logrus.Infof("%#v", queue)
 	var p cheat
-	seen := map[string]bool{}
+	seen := map[string]int{}
 	for len(queue) > 0 {
 		p, queue = queue[0], queue[1:]
+		if p.visited[grid.Key(p.R, p.C)] {
+			continue
+		}
+		p.visited[grid.Key(p.R, p.C)] = true
+
 		for _, dir := range grid.DIR_CROSS {
 			nr := p.R + dir[0]
 			nc := p.C + dir[1]
+
+			if p.depth > cheatLength {
+				continue
+			}
+
 			if !inBound(g, nr, nc) {
-				// logrus.Info("1")
 				continue
 			}
 
-			if exists(p.Path, []int{nr, nc}) {
-				continue
-			}
-
-			if p.depth == 0 && g[nr][nc] != `#` {
-				continue
-			}
-
-			if _, ok := track[grid.Key(nr, nc)]; p.depth > 0 && ok {
-
-				if track[grid.Key(nr, nc)] == -1 {
-					logrus.Info("2")
-					continue
-				}
-
+			//ensure first step is into a wall
+			// if p.depth == 1 && g[nr][nc] != `#` {
+			// 	continue
+			// }
+			// if _, ok := track[grid.Key(nr, nc)]; ok && p.depth > 0 && g[p.R][p.C] == `#` {
+			if _, ok := track[grid.Key(nr, nc)]; ok {
+				score := (max(track[grid.Key(nr, nc)], track[grid.Key(p.Path[0][0], p.Path[0][1])]) - min(track[grid.Key(nr, nc)], track[grid.Key(p.Path[0][0], p.Path[0][1])])) - distance(p.Path[0][0], p.Path[0][1], nr, nc)
 				key := sort([][]int{{nr, nc}, {p.Path[0][0], p.Path[0][1]}})
-				if _, ok := seen[fmt.Sprintf("%#v", key)]; ok {
-					continue
+
+				if seen[fmt.Sprintf("%#v", key)] == 0 || score < seen[fmt.Sprintf("%#v", key)] {
+					seen[fmt.Sprintf("%#v", key)] = score
 				}
-
-				seen[fmt.Sprintf("%#v", key)] = true
-
-				score := max(track[grid.Key(nr, nc)], track[grid.Key(p.Path[0][0], p.Path[0][1])]) - min(track[grid.Key(nr, nc)], track[grid.Key(p.Path[0][0], p.Path[0][1])]) - 2
-				if score >= minimum {
-					logrus.Infof("tracked - or: %d, oc: %d, nr: %d, nc: %d, cost: %d", p.Path[0][0], p.Path[0][1], nr, nc, score)
-					scores[score]++
-					continue
-				}
-				continue
-			}
-
-			if p.depth+1 > cheatLength {
-				// logrus.Info("4")
-				continue
 			}
 
 			queue = append(queue, cheat{
-				R:     nr,
-				C:     nc,
-				depth: p.depth + 1,
-				Path:  append(slices.Clone(p.Path), []int{nr, nc}),
+				R:       nr,
+				C:       nc,
+				depth:   p.depth + 1,
+				Path:    append(slices.Clone(p.Path), []int{nr, nc}),
+				visited: p.visited,
 			})
 		}
 
@@ -115,8 +104,13 @@ func part1(s []byte, cheatLength, minimum int) int {
 
 	score := 0
 
+	for _, v := range seen {
+		scores[v]++
+		continue
+	}
+
 	for k, v := range scores {
-		if k > 0 {
+		if k >= minimum {
 			score += v
 		}
 	}
@@ -153,20 +147,25 @@ func inBound(g grid.Strings, r, c int) bool {
 	}
 
 	//TOP row and bottom row are not valid
-	if r == 0 || r == len(g)-1 {
-		return false
-	}
+	// if r == 0 || r == len(g)-1 {
+	// 	return false
+	// }
 
-	// outer columns are not valid
-	if c == 0 || c == len(g[0])-1 {
-		return false
-	}
+	// // outer columns are not valid
+	// if c == 0 || c == len(g[0])-1 {
+	// 	return false
+	// }
 
 	return true
 }
 
 type cheat struct {
-	R, C  int
-	Path  [][]int
-	depth int
+	R, C    int
+	Path    [][]int
+	depth   int
+	visited map[string]bool
+}
+
+func distance(x1, y1, x2, y2 int) int {
+	return int(math.Abs(float64(x1-x2)) + math.Abs(float64(y1-y2)))
 }
