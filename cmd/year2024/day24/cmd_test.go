@@ -1,7 +1,6 @@
 package day24
 
 import (
-	"fmt"
 	"os"
 	"testing"
 
@@ -57,51 +56,5 @@ func TestPart2(t *testing.T) {
 
 	for _, test := range tests {
 		assert.Equal(t, test.expected, test.fn(test.input))
-	}
-}
-
-func TestAddBinaryStrings(t *testing.T) {
-	tests := []struct {
-		name  string
-		in    []string
-		want  int
-		wantS string
-	}{
-		{
-			name:  `sample input from tests`,
-			in:    []string{`1011`, `1101`},
-			want:  24,
-			wantS: `11000`,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			v := AddBinaryStrings(tt.in...)
-			assert.Equal(t, tt.want, v)
-			assert.Equal(t, tt.wantS, fmt.Sprintf("%b", v))
-		})
-	}
-}
-
-func TestAndBinaryStrings(t *testing.T) {
-	tests := []struct {
-		name  string
-		in    []string
-		want  int
-		wantS string
-	}{
-		{
-			name:  `sample input from tests`,
-			in:    []string{`1011`, `1101`},
-			want:  9,
-			wantS: `1001`,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			v := AndBinaryStrings(tt.in...)
-			assert.Equal(t, tt.want, v)
-			assert.Equal(t, tt.wantS, fmt.Sprintf("%b", v))
-		})
 	}
 }
