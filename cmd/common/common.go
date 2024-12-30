@@ -3,6 +3,7 @@ package common
 import (
 	"fmt"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 
@@ -126,4 +127,32 @@ func Run[T comparable](year, day string, part int, fn func([]byte) T, message ..
 		logrus.Infof("score %s: %#v", m, v)
 	}
 
+}
+
+func Cartesian[T any](sets ...[][]T) [][]T {
+	if len(sets) == 0 {
+		return [][]T{}
+	}
+
+	if len(sets) == 1 {
+		return sets[0]
+	}
+
+	result := sets[0]
+
+	for _, set := range sets[1:] {
+		temp := [][]T{}
+		if len(result) == 0 {
+			result = set
+			continue
+		}
+		for _, element := range set {
+			for _, combinations := range result {
+				temp = append(temp, append(slices.Clone(combinations), slices.Clone(element)...))
+			}
+		}
+
+		result = temp
+	}
+	return result
 }
