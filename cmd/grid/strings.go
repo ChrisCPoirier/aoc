@@ -3,6 +3,7 @@ package grid
 import (
 	"aoc/cmd/common"
 	"fmt"
+	"math"
 	"slices"
 	"strings"
 )
@@ -51,6 +52,14 @@ type step struct {
 // sr (start r), sc (start c), er (end r), ec (end c)
 // walk the grid starting at sr,sc and find the path to er,ec
 func (s Strings) BFS(sr, sc, er, ec, maxDepth int) step {
+	paths := s.BFSAll(sr, sc, er, ec, maxDepth, true)
+	if len(paths) == 0 {
+		return step{}
+	}
+	return paths[0]
+}
+
+func (s Strings) BFSAll(sr, sc, er, ec, maxDepth int, returnOnFirst bool) []step {
 	queue := []step{{
 		R:    sr,
 		C:    sc,
@@ -58,11 +67,28 @@ func (s Strings) BFS(sr, sc, er, ec, maxDepth int) step {
 	}}
 	var p step
 
-	optimal := step{}
+	optimal := []step{}
 
 	visited := map[string]int{}
 	for len(queue) > 0 {
 		p, queue = queue[0], queue[1:]
+
+		if p.R == er && p.C == ec {
+			if len(optimal) == 0 || len(p.Path) < len(optimal[0].Path) {
+				optimal = []step{p}
+				if returnOnFirst {
+					return optimal
+				}
+				continue
+			}
+
+			if len(p.Path) > len(optimal[0].Path) {
+				continue
+			}
+
+			optimal = append(optimal, p)
+			continue
+		}
 
 		if v, ok := visited[Key(p.R, p.C)]; ok {
 			if v < len(p.Path) {
@@ -71,12 +97,6 @@ func (s Strings) BFS(sr, sc, er, ec, maxDepth int) step {
 		}
 
 		visited[Key(p.R, p.C)] = len(p.Path)
-
-		if p.R == er && p.C == ec {
-			if len(optimal.Path) == 0 || len(p.Path) < len(optimal.Path) {
-				optimal = p
-			}
-		}
 
 		for _, dir := range DIR_CROSS {
 			nr := p.R + dir[0]
@@ -179,4 +199,8 @@ func (g Strings) rotateUnequal() Strings {
 
 	g = n
 	return g
+}
+
+func Distance(x1, y1, x2, y2 int) int {
+	return int(math.Abs(float64(x1-x2)) + math.Abs(float64(y1-y2)))
 }
