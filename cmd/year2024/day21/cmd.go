@@ -150,7 +150,7 @@ func sequence(g grid.Strings, in []string) [][]string {
 	return outs
 }
 
-func sequence2(g grid.Strings, start, end string) [][]string {
+func sequencePart(g grid.Strings, start, end string) [][]string {
 	outs := [][]string{}
 
 	cellS := g.FindCell(start)
@@ -238,13 +238,10 @@ func part2(s []byte, depth int) int {
 	return score
 }
 
-func computeKeyPress(s, e []int, depth int, cache map[string]int) int {
+func computeKeyPress(s, e string, depth int, cache map[string]int) int {
 	optimal := 0
-	// optimalSeq := []string{}
-	sr, sc := s[0], s[1]
-	er, ec := e[0], e[1]
 
-	if v, ok := cache[cacheKey(arrowPad[sr][sc], arrowPad[er][ec], depth)]; ok {
+	if v, ok := cache[cacheKey(s, e, depth)]; ok {
 		return v
 	}
 
@@ -253,7 +250,7 @@ func computeKeyPress(s, e []int, depth int, cache map[string]int) int {
 	}
 
 	if depth == 1 {
-		for _, seq := range sequence2(arrowPad, arrowPad[sr][sc], arrowPad[er][ec]) {
+		for _, seq := range sequencePart(arrowPad, s, e) {
 			possible := len(seq)
 			if optimal == 0 || possible < optimal {
 				// optimalSeq = slices.Clone(seq)
@@ -261,16 +258,16 @@ func computeKeyPress(s, e []int, depth int, cache map[string]int) int {
 			}
 		}
 		// logrus.Infof("optimal seq: depth %d, button %s, %#v", depth, arrowPad[sr][sc], optimalSeq)
-		cache[cacheKey(arrowPad[sr][sc], arrowPad[er][ec], depth)] = optimal
+		cache[cacheKey(s, e, depth)] = optimal
 		return optimal
 	}
 
-	for _, seq := range sequence2(arrowPad, arrowPad[sr][sc], arrowPad[er][ec]) {
+	for _, seq := range sequencePart(arrowPad, s, e) {
 		possible := 0
 		seq = append([]string{`A`}, seq...)
 
 		for i := 0; i < len(seq)-1; i++ {
-			possible += computeKeyPress(dmp[seq[i]], dmp[seq[i+1]], depth-1, cache)
+			possible += computeKeyPress(seq[i], seq[i+1], depth-1, cache)
 		}
 
 		if optimal == 0 || possible < optimal {
@@ -279,7 +276,7 @@ func computeKeyPress(s, e []int, depth int, cache map[string]int) int {
 		}
 	}
 
-	cache[cacheKey(arrowPad[sr][sc], arrowPad[er][ec], depth)] = optimal
+	cache[cacheKey(s, e, depth)] = optimal
 	return optimal
 }
 
@@ -290,7 +287,7 @@ func computeKeyPresses(in []string, depth int) int {
 	cache := map[string]int{}
 
 	for i := 0; i < len(in)-1; i++ {
-		comp += computeKeyPress(dmp[in[i]], dmp[in[i+1]], depth, cache)
+		comp += computeKeyPress(in[i], in[i+1], depth, cache)
 	}
 
 	return comp
