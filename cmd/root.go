@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"aoc/cmd/year2015"
 	year2022 "aoc/cmd/year2022"
 	year2023 "aoc/cmd/year2023"
 	"aoc/cmd/year2024"
@@ -21,6 +22,7 @@ var rootCmd = &cobra.Command{
 }
 
 func init() {
+	rootCmd.AddCommand(year2015.Cmd)
 	rootCmd.AddCommand(year2022.Cmd)
 	rootCmd.AddCommand(year2023.Cmd)
 	rootCmd.AddCommand(year2024.Cmd)
